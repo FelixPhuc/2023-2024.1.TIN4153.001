@@ -3,6 +3,7 @@
 
 int main(int argc, char const *argv[])
 {
+  printf("HELLO C++\n");
   LOG_D("WELCOME C++. VVDUNG\n");
   LOG_I("WELCOME C++. VVDUNG\n");
   LOG_W("WELCOME C++. VVDUNG\n");
