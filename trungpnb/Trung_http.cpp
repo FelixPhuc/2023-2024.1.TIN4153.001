@@ -36,7 +36,8 @@ int main(int argc, char const *argv[])
   }
   LOG_DT("Winsock khoi tao thanh cong\n");
 
-  std::string domain = "facebook.com";
+  std::string domain = "youtube.com"; 
+  
   std::string ip = getIpAddress(domain);
 
   LOG_WT("IP of domain [%s] => %s\n",domain.c_str(),ip.c_str());
