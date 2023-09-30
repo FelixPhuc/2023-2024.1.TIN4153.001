@@ -39,7 +39,7 @@ std::string getIpAddress(const std::string& domain){
 
 int main(int argc, char const *argv[])
 {
-  LOG_D("WELCOME C++ - NETWORK HTTP CLIENT\n");
+  LOG_WT("*** NETWORK HTTP CLIENT ***\n");
 
   LOG_IT("1. Khoi tao WinSocket\n");
   if (!InitWinSock()) return -1;
