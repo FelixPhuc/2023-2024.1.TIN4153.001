@@ -41,7 +41,7 @@ int main(int argc, char const *argv[])
 {
   LOG_WT("*** NETWORK HTTP CLIENT ***\n");
 
-  LOG_IT("1. Khoi tao WinSocket\n");
+  LOG_IT("[*] Khoi tao WinSocket\n");
   if (!InitWinSock()) return -1;
 
   std::string domain = "oj.husc.edu.vn";
