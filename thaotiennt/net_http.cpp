@@ -16,7 +16,7 @@ std::string getIpAddress(const std::string& domain){
     //LOG_ET("gethostbyname() error: %ld\n", WSAGetLastError());
     return std::string();
   }
-  struct in_addr addr;
+  struct in_addr addr;.
   addr.s_addr = *(u_long *) remoteHost->h_addr_list[0];
 
   std::string ip(inet_ntoa(addr));
