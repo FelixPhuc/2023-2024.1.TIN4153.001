@@ -6,8 +6,10 @@
 #include "ws2tcpip.h"
 #include "windows.h"
 
+//hàm lấy địa chỉ IPv4 của domain tương ứng
+//muc đích: IPv4 nhận được sử dụng cho hàm connect()
 std::string getIpAddress(const std::string& domain){
-  LOG_D("[CALL] getIpAddress(%s)\n",domain.c_str());
+  LOG_DT("[CALL] getIpAddress(%s)\n",domain.c_str());
   struct hostent *remoteHost;
   remoteHost = gethostbyname(domain.c_str());
   if (remoteHost == NULL) {
@@ -34,14 +36,21 @@ int main(int argc, char const *argv[])
     LOG_ET("WSAStartup() loi: %d\n", err);
     return 1;
   }
-  LOG_DT("Winsock khoi tao thanh cong\n");
+  LOG_DT("[-] Winsock khoi tao thanh cong\n");
 
-  std::string domain = "facebook.com";
+  std::string domain = "oj.husc.edu.vn";
   std::string ip = getIpAddress(domain);
 
-  LOG_WT("IP of domain [%s] => %s\n",domain.c_str(),ip.c_str());
+  if (ip.empty()){
+    LOG_ET("Ten mien [%s] khong ton tai. Error:%d\n",domain.c_str(),WSAGetLastError());
+    LOG_D("");
+    return -1;
+  }
+    
+  else 
+    LOG_WT("IPv4 cua ten mien [%s] => [%s] \n",domain.c_str(),ip.c_str());
 
-  //
+  
   WSACleanup();
   LOG_D("");
   return 0;
