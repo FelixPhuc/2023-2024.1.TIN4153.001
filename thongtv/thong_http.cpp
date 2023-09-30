@@ -38,7 +38,7 @@ int main(int argc, char const *argv[])
   }
   LOG_DT("[-] Winsock khoi tao thanh cong\n");
 
-  std::string domain = "oj.husc.edu.vn";
+  std::string domain = "twitter.com";
   std::string ip = getIpAddress(domain);
 
   if (ip.empty()){
