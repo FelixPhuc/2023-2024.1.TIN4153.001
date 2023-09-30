@@ -6,6 +6,8 @@
 #include "ws2tcpip.h"
 #include "windows.h"
 
+//hàm lấy địa chỉ IPv4 của domain tương ứng
+//muc đích: IPv4 nhận được sử dụng cho hàm connect()
 std::string getIpAddress(const std::string& domain){
   LOG_D("[CALL] getIpAddress(%s)\n",domain.c_str());
   struct hostent *remoteHost;
