@@ -8,4 +8,4 @@ set SRC_COMMON=../_COMMON
 -l ws2_32 ^
 -o thong_http.exe
 REM g++ main.cpp ../../_src/Log.cpp -o t.exe
-REM g++ .\baitap1.cpp ..\_COMMON\Log.cpp -o baitap1.exe
+REM g++ .\thong_http.cpp ..\_COMMON\Log.cpp -o thong_http.exe
