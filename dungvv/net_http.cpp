@@ -5,6 +5,20 @@
 #include "winsock2.h"
 #include "ws2tcpip.h"
 #include "windows.h"
+ 
+//Hàm khởi tạo WinSock
+bool InitWinSock(){
+  WSADATA wsaData;
+  WORD wVersion = MAKEWORD(2,2);
+  int err = WSAStartup(wVersion,&wsaData);
+  if (err != 0) {
+    LOG_ET("WSAStartup() error: %d\n", err);
+    return false;
+  }
+  LOG_DT("[-] Winsock khoi tao thanh cong\n");
+  return true;
+}
+
 //hàm lấy địa chỉ IPv4 của domain tương ứng
 //muc đích: IPv4 nhận được sử dụng cho hàm connect()
 std::string getIpAddress(const std::string& domain){
