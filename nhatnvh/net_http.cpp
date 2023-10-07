@@ -180,7 +180,8 @@ int main(int argc, char const *argv[])
 
   //std::string url = "http://tuyensinh.husc.edu.vn/category/quyche/";
   //std::string url = "http://danang.edu.vn/van-ban-chi-dao";
-  std::string url = "http://hoadon.vtdshn.vn/#/";
+  //std::string url = "http://hoadon.vtdshn.vn/#/";
+  std::string url = "http://baoquankhu4.com.vn/doc-bao-in";
   showUri(url);
   Uri u = Uri::Parse(url);
   
