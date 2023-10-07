@@ -18,6 +18,8 @@ public:
     if (Path.empty()) return std::string("/");
     return Path;
   }
+
+  //Hàm phân tách URI để lấy các thành phần QueryString, Path, Protocol, Host, Port;
   static Uri Parse(const std::string &uri) {
     Uri result;
 
