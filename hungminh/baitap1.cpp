@@ -17,4 +17,3 @@ int main(int argc, char const *argv[])
   LOG_D("");
   return 0;
 }
-
