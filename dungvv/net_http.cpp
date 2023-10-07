@@ -37,7 +37,7 @@ std::string getIpAddress(const std::string& domain){
   LOG_WT("IP OF DOMAIN [%s] => [%s]\n",domain.c_str(),ip.c_str());
   return ip;
 }
-
+//Hiển thị các thành phần của URI 
 void showUri(const std::string& url){
   Uri u = Uri::Parse(url);
   LOG_I("URL [%s]\n",url.c_str());
@@ -50,6 +50,7 @@ void showUri(const std::string& url){
 
     getIpAddress(u.Host);
 }
+//kiểm thử các URI
 void test_uri(){
   showUri("https://stackoverflow.com/questions/2616011/easy-way-to-parse-a-url-in-c-cross-platform");
   showUri("http://localhost:80/foo.html?&q=1:2:3");
@@ -73,7 +74,8 @@ int main(int argc, char const *argv[])
   LOG_IT("[*] Khoi tao WinSocket\n");
   if (!InitWinSock()) return -1;
 
-  showUri("http://danang.edu.vn/documents/11834/0/NAMHOC2023-2024.png/d54daaad-848a-4db4-9c71-13a18d245d77?t=1693884664521");
+  //showUri("http://danang.edu.vn/documents/11834/0/NAMHOC2023-2024.png/d54daaad-848a-4db4-9c71-13a18d245d77?t=1693884664521");
+  test_uri();
   return -1;
 
   std::string domain = "oj.husc.edu.vn";
