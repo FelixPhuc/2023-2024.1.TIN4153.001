@@ -178,8 +178,10 @@ int main(int argc, char const *argv[])
   //return -1;
   //test_getIpAddress();
 
-  //std::string url = "http://tuyensinh.husc.edu.vn/category/quyche/";
-  std::string url = "http://danang.edu.vn/van-ban-chi-dao";
+  std::string url = "http://tuyensinh.husc.edu.vn/category/quyche/";
+  //std::string url = "http://danang.edu.vn/van-ban-chi-dao";
+  //std::string url =  "http://baoquankhu4.com.vn/doc-bao-in";
+  //std::string url = "https://tienganh.tmu.edu.vn/danh-muc/tin-tuc-4073";
   showUri(url);
   Uri u = Uri::Parse(url);
   
