@@ -182,7 +182,8 @@ int main(int argc, char const *argv[])
   //std::string url = "http://danang.edu.vn/van-ban-chi-dao";
   //std::string url = "http://hoadon.vtdshn.vn/#/";
   //std::string url = "http://baoquankhu4.com.vn/doc-bao-in";
-  std::string url = "http://ufl.udn.vn/vie/";
+  //std::string url = "http://ufl.udn.vn/vie/";
+  std::string url = "http://bariavungtau.edu.vn/Default.aspx?sname=SoGDDT&sid=4&pageid=468";
   showUri(url);
   Uri u = Uri::Parse(url);
   
