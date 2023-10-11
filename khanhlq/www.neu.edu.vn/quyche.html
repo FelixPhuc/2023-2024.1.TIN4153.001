@@ -1,0 +1,1129 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>
+	Trường Đại Học Kinh Tế Quốc Dân
+</title><link href="/Components/bootstrap/css/bootstrap.min.css" rel="stylesheet" /><link href="/Components/AnimateCss/animate.css" rel="stylesheet" />
+   
+    <script type="text/javascript" src="/Scripts/jquery.min.js"></script>
+    <script src="/Components/jquery-ui-1.11.1.custom/jquery-ui.min.js"></script>
+     
+    <link rel="shortcut icon" type="image/png" href="/Resources/ImagesPortal/HomePage/imgs/favicon.png" />
+    
+   
+    <script type="text/javascript" src="/Components/Waypoint/jquery.waypoints.min.js"></script>
+  
+    <script type="text/javascript" src="/Components/bootstrap/Js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/Scripts/knockout-2.3.0.js"></script>
+    <script src="/Scripts/Common.js" type="text/javascript"></script>
+  
+    <script src="/Scripts/PagingContent.js" type="text/javascript"></script>
+    <script src="/Scripts/zebra_dialog.js" type="text/javascript"></script>
+    <link href="/CSS/zebra_dialog.css" rel="stylesheet" />
+
+ 
+
+    <script language="javascript" type="text/javascript">
+
+        var pscjq = jQuery.noConflict();
+      
+        function SearchProcess(event, query) {
+            if (event.keyCode == 13) {
+                OnSearch(query);
+                return false;
+            }
+            return true;
+        }
+        function OnSearch(query) {
+            PSCPortal.Services.CMS.SearchAndPaging(query, currentPage, OnSearchSuccess, OnSearchFailed);
+        }
+
+        function OnSearchSuccess(results, context, methodName) {
+          
+            LoadContentAndPaging(results);
+        }
+        function OnSearchFailed(results, context, methodName) {
+        }
+
+        function retitleUrl(str) {
+            str = str.replace(/^\s+|\s+$/g, ''); // trim
+            str = str.toLowerCase();
+            // remove accents, swap ñ for n, etc
+            var from = "àáảãạăằắẳẵặâầấẩẫậđèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵ·/_,:;";
+            var to = "aaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyy------";
+            for (var i = 0, l = from.length ; i < l ; i++) {
+                str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+            }
+            str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+                .replace(/\s+/g, '-') // collapse whitespace and replace by -
+                .replace(/-+/g, '-'); // collapse dashes
+            return str;
+        };
+
+        function popunder() {
+            pscjq('a').not('[href^="http"],[href^="https"],[href^="mailto:"],[href^="#"]').each(function () {
+                pscjq(this).attr('href', function (index, value) {
+                    if (value != undefined) {
+                        var index = value.indexOf("Default.aspx");
+                        if (index >= 0)
+                            return value = "/" + value.substring(index, value.length);
+                       
+                    }
+                });
+            });          
+        }
+        //popup dialog
+        function showDialogInfomation(dialogId) {
+            PSCPortal.Services.CMS.GetArticleContent(dialogId, GetArticleContentCallback);
+        }
+        function GetArticleContentCallback(result) {
+
+            pscjq('#articleModal').find('.modal-body').html(result);
+            pscjq('#articleModal').modal();
+
+            pscjq('#articleModal').find('.modal-body').html(result);
+            pscjq('#articleModal').modal();
+
+        }
+ 
+
+    </script>
+
+    <script>
+        pscjq(document).ready(function () {
+
+     //duration of the top scrolling animation (in ms)
+     scroll_top_duration = 700,
+     //grab the "back to top" link
+     pscjqback_to_top = pscjq('.backtotop');
+      pscjq('.backtotop').css("display","none");
+     
+     //smooth scroll to top
+     pscjqback_to_top.on('click', function (event) {
+         event.preventDefault();
+         pscjq('body,html').animate({
+             scrollTop: 0,
+         }, scroll_top_duration);
+     });
+     pscjq(window).scroll(function () {
+         if (pscjq(this).scrollTop() > 100) {
+             pscjq('.backtotop').fadeIn();
+             pscjq('.backtotop').css("display", "block");
+         } else {
+             pscjq('.backtotop').fadeOut();
+         }
+     });
+     //pscjq.scrollSpeed(100, 800);
+
+ });</script>
+    <script type="text/html" id="search-binding-template">
+        <div class="s-tintuc">
+            <div class='result_lucene'>
+                <a data-bind="html: 'Kết quả tìm thấy: ' + Count" href='#'></a>
+            </div>
+            
+            <div class='nd_news'>
+                <!-- ko foreach: Data -->
+                <div style="margin: 5px 0px 5px 0px; float: left; width: 100%;">
+                    <h4><a class="title_topicdisplay" data-bind="attr: { href: Link }, html: Title"></a></h4>
+                    <h3 class="h3_content" data-bind="html: Highligth + '...'"></h3>
+                </div>
+                <!-- /ko -->
+                <div align='center' id='pagingContentHolder' class='ct_topic_r1'></div>
+            </div>
+        </div>
+    </script>
+   
+<link href="/WebResource.axd?d=nXiiLd7S9UeG-w_sWpLq6bubltU94T1XA8DI4exln3IRX2xNiv8B_3KtDQiW-IzUwMXjwDyrkErFC2Peuf3_1-QWwyGPMdYwJRCqRz3OFXZZtGyiATQyutRboPlZsfrnFcBeXtiYAsT24j1sg_r2QA2&amp;t=637248137270468610" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=xMb7giYmGnt_fd2FfMPgizO1qCA1CQXjNYCJigiZb3pHxD9X6A3oifkDUWEYtrujH2CtxFuvaMZ6FYgmIsT2rXYKjNmB_YTL2V48kHAGnpKxdTRl0zFYZhXhSDbk7OH0fVqHctW5B_8NXjwVO911jqeiBCs3EZ_BnIwngKSW7Dc1&amp;t=637248137270468610" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /></head>
+<body id="bd" class="homepage home-layout1 res" onload='popunder();'>
+    <form name="form1" method="post" action="./" id="form1">
+<input type="hidden" name="RadScriptManager1_TSM" id="RadScriptManager1_TSM" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPaA8FDzhkYmM3MWMwMmYyMTJjNRgBBR5fX0NvbnRyb2xzUmVxdWlyZVBvc3RCYWNrS2V5X18WAQURUmFkV2luZG93TWFuYWdlcjEGFKn1h/XeB2R95gsB5xsTLw29Ia7iO/R48iTs/bKhRA==" />
+
+
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=RadScriptManager1_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSystem.Web.Extensions%2c+Version%3d4.0.0.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d31bf3856ad364e35%3avi-VN%3a633eaa5d-379a-4e64-bd2c-5631e139ee64%3aea597d4b%3bTelerik.Web.UI%2c+Version%3d2020.1.114.45%2c+Culture%3dneutral%2c+PublicKeyToken%3d121fae78165ba3d4%3avi-VN%3a40a36146-6362-49db-b4b5-57ab81f34dac%3a16e4e7cd%3af7645509%3a24ee1bba%3ac128760b%3a874f8ea2%3a19620875%3ab2e06756%3a92fe8ea0%3af46195d3%3afa31b949%3a33715776%3a4877f69a%3a490a9d4e%3abd8f85e4" type="text/javascript"></script>
+<script src="Services/PortletProxy.asmx/js" type="text/javascript"></script>
+<script src="Services/ModuleProxy.asmx/js" type="text/javascript"></script>
+<script src="Services/CMS.asmx/js" type="text/javascript"></script>
+<script src="Services/WeatherService.asmx/js" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="CA0B0334" />
+        <div id="RadWindowManager1" style="display:none;">
+	<!-- 2020.1.114.45 --><div id="RadWindowManager1_alerttemplate" style="display:none;">
+		<div class="rwDialogPopup radalert">			
+			<div class="rwDialogText">
+			{1}				
+			</div>
+			
+			<div>
+				<a  onclick="$find('{0}').close(true);"
+				class="rwPopupButton" href="javascript:void(0);">
+					<span class="rwOuterSpan">
+						<span class="rwInnerSpan">##LOC[OK]##</span>
+					</span>
+				</a>				
+			</div>
+		</div>
+		</div><div id="RadWindowManager1_prompttemplate" style="display:none;">
+		 <div class="rwDialogPopup radprompt">			
+			    <div class="rwDialogText">
+			    {1}				
+			    </div>		
+			    <div>
+				    <script type="text/javascript">
+				    function RadWindowprompt_detectenter(id, ev, input)
+				    {							
+					    if (!ev) ev = window.event;                
+					    if (ev.keyCode == 13)
+					    {															        
+					        var but = input.parentNode.parentNode.getElementsByTagName("A")[0];					        
+					        if (but)
+						    {							
+							    if (but.click) but.click();
+							    else if (but.onclick)
+							    {
+							        but.focus(); var click = but.onclick; but.onclick = null; if (click) click.call(but);							 
+							    }
+						    }
+					       return false;
+					    } 
+					    else return true;
+				    }	 
+				    </script>
+				    <input title="Enter Value" onkeydown="return RadWindowprompt_detectenter('{0}', event, this);" type="text"  class="rwDialogInput" value="{2}" />
+			    </div>
+			    <div>
+				    <a onclick="$find('{0}').close(this.parentNode.parentNode.getElementsByTagName('input')[0].value);"				
+					    class="rwPopupButton" href="javascript:void(0);" ><span class="rwOuterSpan"><span class="rwInnerSpan">##LOC[OK]##</span></span></a>
+				    <a onclick="$find('{0}').close(null);" class="rwPopupButton"  href="javascript:void(0);"><span class="rwOuterSpan"><span class="rwInnerSpan">##LOC[Cancel]##</span></span></a>
+			    </div>
+		    </div>				       
+		</div><div id="RadWindowManager1_confirmtemplate" style="display:none;">
+		<div class="rwDialogPopup radconfirm">			
+			<div class="rwDialogText">
+			{1}				
+			</div>						
+			<div>
+				<a onclick="$find('{0}').close(true);"  class="rwPopupButton" href="javascript:void(0);" ><span class="rwOuterSpan"><span class="rwInnerSpan">##LOC[OK]##</span></span></a>
+				<a onclick="$find('{0}').close(false);" class="rwPopupButton"  href="javascript:void(0);"><span class="rwOuterSpan"><span class="rwInnerSpan">##LOC[Cancel]##</span></span></a>
+			</div>
+		</div>		
+		</div><input id="RadWindowManager1_ClientState" name="RadWindowManager1_ClientState" type="hidden" />
+</div>
+        
+        
+<!-- normalize -->
+	<link href="/Components/vendors/css/normalize.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="/Components/vendors/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/Components/vendors/css/font-awesome.min.css" rel="stylesheet">	
+	<!-- owl.carousel -->
+    <link href="/Components/vendors/css/owl.carousel.min.css" rel="stylesheet">	
+    <link href="/Components/vendors/css/owl.theme.default.min.css" rel="stylesheet">	
+<link href="/Components/vendors/css/jquery.smartmenus.bootstrap.css" rel="stylesheet" />
+	<!-- Addon Bootstrap -->
+	
+<link href="/Components/vendors/css/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
+<link href="/Components/vendors/js/jquery.scrolling-tabs/jquery.scrolling-tabs.min.css" rel="stylesheet" />
+	<link href="/Resources/ImagesPortal/HomePage/css/NEU.css" rel="stylesheet">	
+<link href="/Resources/ImagesPortal/HomePage/css/release.css" rel="stylesheet" />
+<link href="/Resources/ImagesPortal/HomePage/css/Chi-Tiet-Tin.css" rel="stylesheet" />
+<link href="/Components/vendors/js/jq-liscroll-2/style.css" rel="stylesheet" />
+<script src="/Components/vendors/js/owl.carousel.min.js"></script>	
+	<!-- Addon Bootstrap -->
+	<script src="/Components/vendors/js/menu-components.js"></script>
+
+<script src="/Components/vendors/js/jquery.smartmenus.min.js"></script>
+
+<script src="/Components/vendors/js/jquery.smartmenus.bootstrap.min.js"></script>
+	<script src="/Resources/ImagesPortal/HomePage/js/slider-hoptacdanhnghiep.js"></script>
+<script src="/Components/vendors/js/jquery.mCustomScrollbar.min.js"></script>
+<script src="/Resources/ImagesPortal/HomePage/js/scroll-news.js"></script>
+
+<script src="/Components/vendors/js/jquery.scrolling-tabs/jquery.scrolling-tabs.min.js"></script>
+<script src="/Components/vendors/js/jq-liscroll-2/index.js"></script>
+<div id="page">
+<div id="psc-divPanelWrapper">
+	<div id="psc-divPanelTop" style="width:100%">
+		<div id="psc-divPanelTop-Content" style="min-height: 30px;">
+			<div id="psc-divPortlet-90fe2168-7210-4544-af13-aac9ca0da445" class="psc-divPortlet-Wrapper" style="">
+				<div class="psc-divPortlet-Content">
+					<div class="width-common">
+<div class="container head">
+<div class="top-link">
+<a class="tl-item language" href="https://en.neu.edu.vn/"><img src="/Resources/ImagesPortal/HomePage/imgs/language/English.png" alt="English" /></a>
+<div class="tl-item search">
+<div class="input-group">
+<input class="form-control" name="q" id="txtSearchArticle" placeholder="Tìm kiếm ..." onkeydown="return SearchProcess(event,document.getElementById('txtSearchArticle').value);" type="text" />
+<span class="input-group-btn">
+<button class="btn btn-default" type="reset" onclick="OnSearch(document.getElementById('txtSearchArticle').value);"><span class="glyphicon glyphicon-search"></span>
+</button>
+</span>
+</div>
+</div>
+<a class="tl-item" href="https://outlook.office.com/mail">Email</a>
+<a class="tl-item" href="/module/sitemap?q=cau-truc-site-map">Sitemap</a>
+<a class="tl-item" href="https://thongtinnoibo.neu.edu.vn/">Th&ocirc;ng tin nội bộ</a>
+<a class="tl-item" href="http://e-office.neu.edu.vn/">E-Office</a>
+<a class="tl-item" href="http://dec.neu.edu.vn/">E-LEARNING</a>
+<a class="tl-item" href="https://onegate.neu.edu.vn">Dịch vụ c&ocirc;ng</a>
+<a class="tl-item" href="https://neu.edu.vn/vi/hoi-dong-giao-su">HĐ Gi&aacute;o sư</a>
+<a class="tl-item" href="https://neu.edu.vn/vi/muc-tieu-phat-trien-ben-vung-sdgs">Mục ti&ecirc;u PT Bền vững</a>
+</div>
+</div>
+</div>
+
+				</div>
+			</div><div id="psc-divPortlet-59428560-b4de-4be6-8252-244bbb2b6346" class="psc-divPortlet-Wrapper" style="width:100%; float:left;">
+				<div class="psc-divPortlet-Content">
+					
+
+
+<header class="header width-common">			
+			<div class="container ">
+				<div class="bg-header">
+					<div class="header-top">							
+                        <!-- BANNER -->
+<div id="banner">
+<div class="hero-text">
+<a href="https://neu.edu.vn/" class="logo pull-left"> <img alt="" src="/Resources/Images/SubDomain/HomePage/banner/BANNER2023new.jpg" /> </a>
+</div>
+<!-- hero-text -->
+<div class="hero-cover">
+<div class="owl-carousel owl-theme slider-img">
+<div class="item">
+<a href="#"><img alt="" src="/Resources/Images/SubDomain/HomePage/Banner2022/1.jpg" /></a>
+</div>
+<div class="item">
+<a href="#"><img alt="" src="/Resources/Images/SubDomain/HomePage/Banner2022/2.jpg" /></a>
+</div>
+<div class="item">
+<a href="#"><img alt="" src="/Resources/Images/SubDomain/HomePage/Banner2022/4.jpg" /></a>
+</div>
+<div class="item">
+<a href="#"><img alt="" src="/Resources/Images/SubDomain/HomePage/Banner2022/5.jpg" /></a>
+</div>
+<div class="item">
+<a href="#"><img alt="" src="/Resources/Images/SubDomain/HomePage/Banner2022/6.jpg" /></a>
+</div>
+<div class="item">
+<a href="#"><img alt="" src="/Resources/Images/SubDomain/HomePage/Banner2022/7.jpg" /></a>
+</div>
+</div>
+</div>
+</div>
+<!-- hero-cover -->
+					</div>
+					<div class="top-menu width-common">
+						<!-- Navbar static top -->
+						<div class="navbar navbar-default navbar-static-top" role="navigation">
+							<div class="container">
+								<div class="navbar-header">								
+									<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+										<span class="sr-only">Toggle navigation</span>
+										<span class="icon-bar"></span>
+										<span class="icon-bar"></span>
+										<span class="icon-bar"></span>
+									</button>
+                                    <button type="button" class=" search-btn" data-toggle="collapse" data-target=".search-collapse"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> </button>
+								</div>
+								<div class="navbar-collapse collapse">
+									<!-- Right nav -->
+									<ul class="nav navbar-nav">							
+
+									 <li><a  >Giới thiệu<span class='caret'></span></a><ul class='dropdown-menu'><li  class=''><a class='wobble-horizontal' title='Lịch sử hình thành và phát triển trường' href='/vi/gioi-thieu-ve-truong/lich-su-hinh-thanh-va-phat-trien-truong'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Lịch sử hình thành và phát triển trường</a></li><li  class=''><a class='wobble-horizontal' title='Chiến lược phát triển Trường Đại học Kinh tế Quốc dân 2020 - 2030 ' href='/vi/chien-luoc-phat-trien-truong-dai-hoc-kinh-te-quoc-dan-2020-2030/chien-luoc-phat-trien-truong-dai-hoc-kinh-te-quoc-dan-giai-doan-2021-2030'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Chiến lược phát triển Trường Đại học Kinh tế Quốc dân 2020 - 2030 </a></li><li  class=''><a class='wobble-horizontal' title='Thư Hiệu trưởng' href='https://neu.edu.vn/vi/thu-hieu-truong'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Thư Hiệu trưởng</a></li><li  class=''><a class='wobble-horizontal' title='Hệ thống nhận diện' href='/vi/su-menh-tam-nhin/he-thong-nhan-dien-4420'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Hệ thống nhận diện</a></li><li  class=''><a class='wobble-horizontal' title='Bản đồ đường đi' href='/vi/so-do-duong-di/ban-do-duong-di'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Bản đồ đường đi</a></li><li class=''><a class='wobble-horizontal' title='Cơ cấu tổ chức'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Cơ cấu tổ chức<span class='caret'></span></a><ul class='dropdown-menu'><li class=''><a class='wobble-horizontal' title='Đảng ủy trường'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Đảng ủy trường<span class='caret'></span></a><ul class='dropdown-menu'><li  class='menu-khoa-lv1-li'><a href='https://neu.edu.vn/vi/co-cau-to-chuc/dang-uy-nhiem-ky-2020-2025'>Danh sách Đảng ủy trường</a></li><li  class='menu-khoa-lv1-li'><a href='/vi/cong-tac-dang'>Công tác đảng</a></li></ul></li><li   class=''><a class='wobble-horizontal' title='Hội đồng trường' href='https://neu.edu.vn/vi/co-cau-to-chuc/hoi-dong-truong-2021-2026'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Hội đồng trường</a></li><li   class=''><a class='wobble-horizontal' title='Ban Giám hiệu' href='/vi/co-cau-to-chuc/ban-giam-hieu-5549'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Ban Giám hiệu</a></li><li   class=''><a class='wobble-horizontal' title='Hội đồng Khoa học và Đào tạo' href='/vi/hoi-dong-khoa-hoc-va-dao-tao'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Hội đồng Khoa học và Đào tạo</a></li><li   class=''><a class='wobble-horizontal' title='Hội đồng tư vấn' href='/vi/hoi-dong-tu-van'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Hội đồng tư vấn</a></li><li class=''><a class='wobble-horizontal' title='Các tổ chức đoàn thể'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Các tổ chức đoàn thể<span class='caret'></span></a><ul class='dropdown-menu'><li  class='menu-khoa-lv1-li'><a href='https://congdoan.neu.edu.vn/'>Công đoàn</a></li><li  class='menu-khoa-lv1-li'><a href='https://youth.neu.edu.vn/web/'>Đoàn Thanh niên</a></li><li  class='menu-khoa-lv1-li'><a href='https://www.hoicuuchienbinh.neu.edu.vn/'>Hội Cựu chiến binh</a></li><li  class='menu-khoa-lv1-li'><a href='https://hoisinhvien.neu.edu.vn/'>Hội Sinh viên</a></li></ul></li><li   class=''><a class='wobble-horizontal' title='Các đơn vị trực thuộc trường' href='/vi/co-cau-to-chuc/cac-don-vi-truc-thuoc-truong'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Các đơn vị trực thuộc trường</a></li></ul></li><li  class=''><a class='wobble-horizontal' title='Ba công khai' href='/vi/ba-cong-khai'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Ba công khai</a></li><li  class=''><a class='wobble-horizontal' title='Mạng lưới Cựu sinh viên ' href='https://alumni.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Mạng lưới Cựu sinh viên </a></li><li  class=''><a class='wobble-horizontal' title='Câu chuyện NEU' href='/vi/cau-chuyen-neu'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Câu chuyện NEU</a></li></ul></li><li><a  >Đơn vị<span class='caret'></span></a><ul class='dropdown-menu'><li class=''><a class='wobble-horizontal' title='Phòng Ban'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Phòng Ban<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Phòng Tổng Hợp' href='https://phongtonghop.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Phòng Tổng Hợp</a></li><li   class=''><a class='wobble-horizontal' title='Phòng Tổ chức cán bộ' href='https://ptccb.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Phòng Tổ chức cán bộ</a></li><li   class=''><a class='wobble-horizontal' title='Phòng Quản lý đào tạo' href='https://daotao.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Phòng Quản lý đào tạo</a></li><li   class=''><a class='wobble-horizontal' title='Phòng Quản Lý Khoa Học' href='https://khoahoc.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Phòng Quản Lý Khoa Học</a></li><li   class=''><a class='wobble-horizontal' title='Phòng Hợp Tác Quốc Tế' href='https://phonghtqt.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Phòng Hợp Tác Quốc Tế</a></li><li   class=''><a class='wobble-horizontal' title='Phòng Khảo thí và đảm bảo chất lượng giáo dục' href='https://khaothi-dbclgd.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Phòng Khảo thí và đảm bảo chất lượng giáo dục</a></li><li   class=''><a class='wobble-horizontal' title='Phòng công tác chính trị & quản lý sinh viên' href='https://phongctctqlsv.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Phòng công tác chính trị & quản lý sinh viên</a></li><li   class=''><a class='wobble-horizontal' title='Phòng Thanh Tra Pháp Chế' href='https://phongthanhtra.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Phòng Thanh Tra Pháp Chế</a></li><li   class=''><a class='wobble-horizontal' title='Phòng Tài chính & Kế toán' href='https://ptckt.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Phòng Tài chính & Kế toán</a></li><li   class=''><a class='wobble-horizontal' title='Phòng Truyền Thông' href='https://phongtruyenthong.neu.edu.vn'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Phòng Truyền Thông</a></li><li   class=''><a class='wobble-horizontal' title='Phòng Quản Trị Thiết Bị' href='https://phongquantrithietbi.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Phòng Quản Trị Thiết Bị</a></li><li   class=''><a class='wobble-horizontal' title='Trạm Y Tế' href='https://yte.neu.edu.vn'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Trạm Y Tế</a></li><li   class=''><a class='wobble-horizontal' title='Tạp Chí Kinh Tế Phát Triển' href='http://ktpt.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Tạp Chí Kinh Tế Phát Triển</a></li><li   class=''><a class='wobble-horizontal' title='Nhà Xuất Bản' href='https://nxb.neu.edu.vn'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Nhà Xuất Bản</a></li></ul></li><li class=''><a class='wobble-horizontal' title='Viện '><span class='fa fa-angle-double-right' aria-hidden='true'></span>Viện <span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Viện Ngân hàng-Tài chính' href='https://nhtc.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Viện Ngân hàng-Tài chính</a></li><li   class=''><a class='wobble-horizontal' title='Viện Công nghệ thông tin và Kinh tế số' href='https://sitde.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Viện Công nghệ thông tin và Kinh tế số</a></li><li   class=''><a class='wobble-horizontal' title='Viện Đào tạo Sau đại học' href='http://sdh.neu.edu.vn'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Viện Đào tạo Sau đại học</a></li><li   class=''><a class='wobble-horizontal' title='Viện Quản trị Kinh doanh' href='https://bsneu.neu.edu.vn'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Viện Quản trị Kinh doanh</a></li><li   class=''><a class='wobble-horizontal' title='Viện Đào tạo quốc tế' href='http://isme.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Viện Đào tạo quốc tế</a></li><li   class=''><a class='wobble-horizontal' title='Viện Thương mại và kinh tế quốc tế' href='https://vienthuongmaikinhtequocte.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Viện Thương mại và kinh tế quốc tế</a></li><li   class=''><a class='wobble-horizontal' title='Viện Phát triển bền vững' href='https://isd.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Viện Phát triển bền vững</a></li><li   class=''><a class='wobble-horizontal' title='Viện Kế toán - Kiểm toán ' href='http://saa.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Viện Kế toán - Kiểm toán </a></li><li   class=''><a class='wobble-horizontal' title='VIỆN ĐÀO TẠO TIÊN TIẾN, CHẤT LƯỢNG CAO VÀ POHE' href='https://www.aep.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>VIỆN ĐÀO TẠO TIÊN TIẾN, CHẤT LƯỢNG CAO VÀ POHE</a></li></ul></li><li class=''><a class='wobble-horizontal' title='Khoa'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Khoa Bảo hiểm' href='https://khoabaohiem.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Bảo hiểm</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Bất động sản và kinh tế tài nguyên' href='https://khoabatdongsan.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Bất động sản và kinh tế tài nguyên</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Đầu Tư' href='https://khoadautu.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Đầu Tư</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Du lịch & Khách sạn' href='https://dulichkhachsan.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Du lịch & Khách sạn</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Kế hoạch & Phát triển' href='https://khoakhpt.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Kế hoạch & Phát triển</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Khoa học quản lý' href='https://khql.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Khoa học quản lý</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Kinh tế học' href='https://economics.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Kinh tế học</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Kinh tế và quản lý nguồn nhân lực' href='https://khoaquanlynguonnhanluc.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Kinh tế và quản lý nguồn nhân lực</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Luật' href='https://khoaluat.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Luật</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Lý luận chính trị' href='https://khoalyluanchinhtri.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Lý luận chính trị</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Marketing' href='https://khoamarketing.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Marketing</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Môi trường, biến đổi khí hậu và đô thị' href='https://khoamoitruongdothi.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Môi trường, biến đổi khí hậu và đô thị</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Ngoại ngữ Kinh tế' href='https://ffl.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Ngoại ngữ Kinh tế</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Quản Trị Kinh Doanh' href='https://fbm.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Quản Trị Kinh Doanh</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Thống kê' href='https://khoathongke.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Thống kê</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Toán Kinh tế' href='http://mfe.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Toán Kinh tế</a></li><li   class=''><a class='wobble-horizontal' title='Khoa Đại học Tại chức' href='https://khoataichuc.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Khoa Đại học Tại chức</a></li><li   class=''><a class='wobble-horizontal' title='Bộ môn Giáo dục thể chất' href='https://theducthethao.neu.edu.vn'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Bộ môn Giáo dục thể chất</a></li></ul></li><li class=''><a class='wobble-horizontal' title='Trung Tâm'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Trung Tâm<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Trung tâm ứng dụng công nghệ thông tin' href='https://cait.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Trung tâm ứng dụng công nghệ thông tin</a></li><li   class=''><a class='wobble-horizontal' title='TT Đào tạo liên tục' href='http://ttdaotaolientuc.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>TT Đào tạo liên tục</a></li><li   class=''><a class='wobble-horizontal' title='TT Thông tin - Thư viện' href='https://neulib.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>TT Thông tin - Thư viện</a></li><li   class=''><a class='wobble-horizontal' title='TT Đào tạo từ xa' href='http://dec.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>TT Đào tạo từ xa</a></li><li   class=''><a class='wobble-horizontal' title='TT Dịch vụ hỗ trợ đào tạo' href='https://trungtamdichvu.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>TT Dịch vụ hỗ trợ đào tạo</a></li><li   class=''><a class='wobble-horizontal' title='Trung tâm ngoại ngữ kinh tế' href='https://efl.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Trung tâm ngoại ngữ kinh tế</a></li><li   class=''><a class='wobble-horizontal' title='Trung tâm đào tạo và tư vấn CNTT' href='https://tttinhoc.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Trung tâm đào tạo và tư vấn CNTT</a></li><li   class=''><a class='wobble-horizontal' title='Trung tâm Nghiên cứu, Tư vấn Kinh tế và Kinh doanh' href='https://crceb.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Trung tâm Nghiên cứu, Tư vấn Kinh tế và Kinh doanh</a></li><li   class=''><a class='wobble-horizontal' title='TT khởi nghiệp sáng tạo xã hội' href='https://csie.neu.edu.vn'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>TT khởi nghiệp sáng tạo xã hội</a></li></ul></li><li class=''><a class='wobble-horizontal' title='TC CTXH'><span class='fa fa-angle-double-right' aria-hidden='true'></span>TC CTXH<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Hội CCB' href='https://hoiccb.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Hội CCB</a></li><li   class=''><a class='wobble-horizontal' title='Hội sinh viên' href='https://hoisinhvien.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Hội sinh viên</a></li><li   class=''><a class='wobble-horizontal' title='Đoàn Thanh niên' href='https://youth.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Đoàn Thanh niên</a></li><li   class=''><a class='wobble-horizontal' title='Công Đoàn Trường' href='https://congdoan.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Công Đoàn Trường</a></li><li   class=''><a class='wobble-horizontal' title='Mạng lưới Cựu sinh viên' href='http://alumni.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Mạng lưới Cựu sinh viên</a></li></ul></li><li class=''><a class='wobble-horizontal' title='Hội đồng Giáo sư'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Hội đồng Giáo sư<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Hội đồng Giáo sư cơ sở' href='/vi/hoi-dong-giao-su-co-so'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Hội đồng Giáo sư cơ sở</a></li><li   class=''><a class='wobble-horizontal' title='HĐ Giáo sư ngành Kinh tế' href='/vi/hd-giao-su-nganh-kinh-te'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>HĐ Giáo sư ngành Kinh tế</a></li></ul></li><li  class=''><a class='wobble-horizontal' title='Kiểm toán nội bộ' href='/vi/kiem-toan-noi-bo'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Kiểm toán nội bộ</a></li></ul></li><li><a  >Đào tạo<span class='caret'></span></a><ul class='dropdown-menu'><li  class=''><a class='wobble-horizontal' title='Đại học' href='https://daotaodaihoc.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Đại học</a></li><li  class=''><a class='wobble-horizontal' title='Sau đại học' href='/vi/dao-tao-sdh-1932/dao-tao-sau-dai-hoc'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Sau đại học</a></li><li  class=''><a class='wobble-horizontal' title='Chương trình tiên tiến' href='http://www.aep.neu.edu.vn/web/vn/index.html'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Chương trình tiên tiến</a></li><li class=''><a class='wobble-horizontal' title='Đào tạo ngắn hạn'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Đào tạo ngắn hạn<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Chứng chỉ Ứng dụng CNTT cơ bản' href='https://tttinhoc.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Chứng chỉ Ứng dụng CNTT cơ bản</a></li><li   class=''><a class='wobble-horizontal' title='Ngoại ngữ' href='https://trungtamngoainguneu.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Ngoại ngữ</a></li><li   class=''><a class='wobble-horizontal' title='Chứng chỉ Kinh tế, Kế toán, Kế toán trưởng, Marketing, Quản trị kinh doanh' href='http://ttdaotaolientuc.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Chứng chỉ Kinh tế, Kế toán, Kế toán trưởng, Marketing, Quản trị kinh doanh</a></li><li   class=''><a class='wobble-horizontal' title='Chứng chỉ về Kế toán - Kiểm toán' href='https://daotaoketoan.neu.edu.vn'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Chứng chỉ về Kế toán - Kiểm toán</a></li><li   class=''><a class='wobble-horizontal' title='Chứng chỉ Bảo hiểm và chứng chỉ của ANZIIF ' href='https://khoabaohiem.neu.edu.vn/vi/ngan-han'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Chứng chỉ Bảo hiểm và chứng chỉ của ANZIIF </a></li></ul></li></ul></li><li><a  >Hợp tác quốc tế<span class='caret'></span></a><ul class='dropdown-menu'><li  class=''><a class='wobble-horizontal' title='Giới thiệu về hợp tác Quốc tế' href='https://phonghtqt.neu.edu.vn/vi/gioi-thieu-4043/gioi-thieu-hoat-dong-hop-tac-quoc-te'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Giới thiệu về hợp tác Quốc tế</a></li><li  class=''><a class='wobble-horizontal' title='Tin tức về hợp tác Quốc tế' href='https://phonghtqt.neu.edu.vn/vi/tin-hop-tac-quoc-te'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Tin tức về hợp tác Quốc tế</a></li><li class=''><a class='wobble-horizontal' title='Chương trình liên kết đào tạo'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Chương trình liên kết đào tạo<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Quy định về Chương trình liên kết đào tạo tại Trường Đại học Kinh tế Quốc dân' href='https://phonghtqt.neu.edu.vn/vi/quy-dinh-ve-chuong-trinh-lien-ket-dao-tao-tai-truong-dai-hoc-kinh-te-quoc-dan/quy-dinh-ve-chuong-trinh-lien-ket-dao-tao-tai-truong-dai-hoc-kinh-te-quoc-dan'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Quy định về Chương trình liên kết đào tạo tại Trường Đại học Kinh tế Quốc dân</a></li><li   class=''><a class='wobble-horizontal' title='CÁC CHƯƠNG TRÌNH LIÊN KẾT ĐÀO TẠO VỚI NƯỚC NGOÀI TẠI TRƯỜNG ĐHKTQD' href='https://phonghtqt.neu.edu.vn/vi/cac-chuong-trinh-lien-ket-dao-tao-voi-nuoc-ngoai-tai-truong-dhktqd/thong-ke-cac-chuong-trinh-lien-ket-dao-tao-voi-nuoc-ngoai-dang-hoat-dong-tai-truong-dhktqd'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>CÁC CHƯƠNG TRÌNH LIÊN KẾT ĐÀO TẠO VỚI NƯỚC NGOÀI TẠI TRƯỜNG ĐHKTQD</a></li></ul></li><li  class=''><a class='wobble-horizontal' title='Mạng lưới hợp tác quốc tế' href='https://phonghtqt.neu.edu.vn/vi/gioi-thieu-4043/mang-luoi-hop-tac-quoc-te'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Mạng lưới hợp tác quốc tế</a></li><li class=''><a class='wobble-horizontal' title='Cơ hội và Học bổng'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Cơ hội và Học bổng<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Học bổng dành cho giảng viên' href='https://phonghtqt.neu.edu.vn/vi/co-hoi-va-hoc-bong-cho-giang-vien'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Học bổng dành cho giảng viên</a></li><li   class=''><a class='wobble-horizontal' title='Học bổng ngoài ngân sách Chính phủ' href='https://phonghtqt.neu.edu.vn/vi/hoc-bong-ngoai-ngan-sach-chinh-phu'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Học bổng ngoài ngân sách Chính phủ</a></li><li   class=''><a class='wobble-horizontal' title='Học bổng dành cho sinh viên' href='https://phonghtqt.neu.edu.vn/vi/co-hoi-va-hoc-bong-cho-sinh-vien'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Học bổng dành cho sinh viên</a></li><li   class=''><a class='wobble-horizontal' title='Trao đổi sinh viên và du học' href='https://phonghtqt.neu.edu.vn/vi/trao-doi-sinh-vien'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Trao đổi sinh viên và du học</a></li></ul></li></ul></li><li><a  >Nghiên cứu khoa học<span class='caret'></span></a><ul class='dropdown-menu'><li  class=''><a class='wobble-horizontal' title='Thông báo' href='https://khoahoc.neu.edu.vn/vi/thong-bao-5107'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Thông báo</a></li><li  class=''><a class='wobble-horizontal' title='Thư mời viết bài hội thảo' href='https://khoahoc.neu.edu.vn/vi/thu-moi-viet-bai-hoi-thao'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Thư mời viết bài hội thảo</a></li><li class=''><a class='wobble-horizontal' title='Đề tài'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Đề tài<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Cấp Nhà nước' href='https://khoahoc.neu.edu.vn/vi/cap-nha-nuoc'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Cấp Nhà nước</a></li><li class=''><a class='wobble-horizontal' title='Cấp Bộ'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Cấp Bộ<span class='caret'></span></a><ul class='dropdown-menu'><li  class='menu-khoa-lv1-li'><a href='https://khoahoc.neu.edu.vn/vi/danh-muc'>Danh mục</a></li><li  class='menu-khoa-lv1-li'><a href='https://khoahoc.neu.edu.vn/vi/ket-qua-nghien-cuu'>Kết quả nghiên cứu</a></li></ul></li><li class=''><a class='wobble-horizontal' title='Cấp Trường'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Cấp Trường<span class='caret'></span></a><ul class='dropdown-menu'><li  class='menu-khoa-lv1-li'><a href='https://khoahoc.neu.edu.vn/vi/danh-muc-2666'>Danh mục</a></li><li  class='menu-khoa-lv1-li'><a href='https://khoahoc.neu.edu.vn/vi/ket-qua-nghien-cuu-2667'>Kết quả nghiên cứu</a></li></ul></li><li   class=''><a class='wobble-horizontal' title='Hợp đồng với bên ngoài' href='https://khoahoc.neu.edu.vn/vi/hop-dong-voi-ben-ngoai'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Hợp đồng với bên ngoài</a></li></ul></li><li class=''><a class='wobble-horizontal' title='Hội thảo'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Hội thảo<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Thư mời viết bài hội thảo' href='https://khoahoc.neu.edu.vn/vi/thu-moi-viet-bai-hoi-thao'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Thư mời viết bài hội thảo</a></li><li   class=''><a class='wobble-horizontal' title='Hội thảo quốc tế CIEMB' href='https://ciemb.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Hội thảo quốc tế CIEMB</a></li><li   class=''><a class='wobble-horizontal' title='Hội thảo Đánh giá Kinh tế VN thường niên' href='https://khoahoc.neu.edu.vn/vi/hoi-thao-danh-gia-kinh-te-vn-thuong-nien'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Hội thảo Đánh giá Kinh tế VN thường niên</a></li><li   class=''><a class='wobble-horizontal' title='Hội thảo quốc tế' href='https://khoahoc.neu.edu.vn/vi/hoi-thao-quoc-te'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Hội thảo quốc tế</a></li><li   class=''><a class='wobble-horizontal' title='Hội thảo quốc gia' href='https://khoahoc.neu.edu.vn/vi/hoi-thao-quoc-gia'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Hội thảo quốc gia</a></li></ul></li><li class=''><a class='wobble-horizontal' title='Tọa đàm'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Tọa đàm<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Đối thoại chính sách' href='https://khoahoc.neu.edu.vn/vi/doi-thoai-chinh-sach'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Đối thoại chính sách</a></li><li   class=''><a class='wobble-horizontal' title='Seminars' href='https://khoahoc.neu.edu.vn/vi/seminars'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Seminars</a></li><li class=''><a class='wobble-horizontal' title='Sinh hoạt khoa học bộ môn'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Sinh hoạt khoa học bộ môn<span class='caret'></span></a><ul class='dropdown-menu'><li  class='menu-khoa-lv1-li'><a href='https://khoahoc.neu.edu.vn/vi/hoc-ky-1-2866'>Học kỳ 1 - 2023</a></li><li  class='menu-khoa-lv1-li'><a href='https://khoahoc.neu.edu.vn/vi/hoc-ky-1-2696'>Học kỳ 1 - 2021-2022</a></li><li  class='menu-khoa-lv1-li'><a href='https://khoahoc.neu.edu.vn/vi/hoc-ky-2-2824'>Học kỳ 2 - 2021-2022</a></li></ul></li></ul></li><li  class=''><a class='wobble-horizontal' title='NCKH sinh viên' href='https://khoahoc.neu.edu.vn/vi/nckh-sinh-vien-1800'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>NCKH sinh viên</a></li><li class=''><a class='wobble-horizontal' title='Sản phẩm NCKH'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Sản phẩm NCKH<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Công bố quốc tế' href='https://khoahoc.neu.edu.vn/vi/cong-bo-quoc-te'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Công bố quốc tế</a></li><li class=''><a class='wobble-horizontal' title='Đánh giá Kinh tế Việt Nam thường niên'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Đánh giá Kinh tế Việt Nam thường niên<span class='caret'></span></a><ul class='dropdown-menu'><li  class='menu-khoa-lv1-li'><a href='https://khoahoc.neu.edu.vn/vi/2022-2917'>Năm 2022</a></li><li  class='menu-khoa-lv1-li'><a href='https://khoahoc.neu.edu.vn/vi/2021-2847'>Năm 2021</a></li><li  class='menu-khoa-lv1-li'><a href='https://khoahoc.neu.edu.vn/vi/2020-2672'>Năm 2020</a></li><li  class='menu-khoa-lv1-li'><a href='https://khoahoc.neu.edu.vn/vi/2019-2570'>Năm 2019</a></li><li  class='menu-khoa-lv1-li'><a href='https://khoahoc.neu.edu.vn/vi/2018'>Năm 2018</a></li><li  class='menu-khoa-lv1-li'><a href='https://khoahoc.neu.edu.vn/vi/2017'>Năm 2017</a></li></ul></li></ul></li><li  class=''><a class='wobble-horizontal' title='Hướng dẫn triển khai hoạt động KHCN' href='https://khoahoc.neu.edu.vn/vi/thong-bao-5107/quyet-dinh-so-1796-qd-dhktqd-ban-hanh-quy-che-hoat-dong-khoa-hoc-va-cong-nghe-cua-truong-dhktqd'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Hướng dẫn triển khai hoạt động KHCN</a></li><li class=''><a class='wobble-horizontal' title='Useful Links'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Useful Links<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Link tra cứu các tạp chí có uy tín' href='https://khoahoc.neu.edu.vn/vi/link-tra-cuu-cac-tap-chi-co-uy-tin/link-tra-cuu-cac-tap-chi-co-uy-tin'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Link tra cứu các tạp chí có uy tín</a></li><li   class=''><a class='wobble-horizontal' title='Các chương trình tài trợ nghiên cứu' href='https://khoahoc.neu.edu.vn/vi/cac-chuong-trinh-tai-tro-nghien-cuu/cac-chuong-trinh-tai-tro-nghien-cuu'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Các chương trình tài trợ nghiên cứu</a></li><li   class=''><a class='wobble-horizontal' title='Các cơ quan quản lý nhà nước' href='https://khoahoc.neu.edu.vn/vi/cac-co-quan-quan-ly-nha-nuoc/cac-co-quan-quan-ly-nha-nuoc-ve-khcn'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Các cơ quan quản lý nhà nước</a></li><li   class=''><a class='wobble-horizontal' title='Các cơ sở dữ liệu' href='https://khoahoc.neu.edu.vn/vi/cac-co-so-du-lieu/cac-co-so-du-lieu'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Các cơ sở dữ liệu</a></li><li   class=''><a class='wobble-horizontal' title='Link hỗ trợ nghiên cứu' href='https://khoahoc.neu.edu.vn/vi/link-ho-tro-nghien-cuu/link-ho-tro-nghien-cuu'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Link hỗ trợ nghiên cứu</a></li></ul></li><li  class=''><a class='wobble-horizontal' title='Văn bản quản lý' href='https://khoahoc.neu.edu.vn/vi/van-ban-quan-ly'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Văn bản quản lý</a></li></ul></li><li ><a href='https://tuyensinh.neu.edu.vn'>Tuyển sinh</a></li><li><a  >Dịch vụ<span class='caret'></span></a><ul class='dropdown-menu'><li class=''><a class='wobble-horizontal' title='Dịch vụ công'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Dịch vụ công<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='QL Giảng đường' href='https://qlgd.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>QL Giảng đường</a></li><li   class=''><a class='wobble-horizontal' title='Dịch vụ công' href='https://onegate.neu.edu.vn/#/app/procedure/?page=1&pageSize=10'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Dịch vụ công</a></li></ul></li><li  class=''><a class='wobble-horizontal' title='E-Office' href='https://e-office.neu.edu.vn'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>E-Office</a></li><li class=''><a class='wobble-horizontal' title='Thư viện'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Thư viện<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='CSDL điện tử' href='https://dlib.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>CSDL điện tử</a></li><li   class=''><a class='wobble-horizontal' title='Thư viện' href='https://neulib.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Thư viện</a></li></ul></li><li class=''><a class='wobble-horizontal' title='Quản lý đào tạo'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Quản lý đào tạo<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Quản lý giảng đường' href='https://qlgd.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Quản lý giảng đường</a></li><li   class=''><a class='wobble-horizontal' title='Quản lý đào tạo ĐHCQ (QLĐT2)' href='https://qldt2.neu.edu.vn/cmcsoft.iu.web.info/login.aspx'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Quản lý đào tạo ĐHCQ (QLĐT2)</a></li><li   class=''><a class='wobble-horizontal' title='Quản lý đào tạo tại chức' href='https://qldt.neu.edu.vn/cmcsoft.iu.web.info/login.aspx'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Quản lý đào tạo tại chức</a></li></ul></li><li  class=''><a class='wobble-horizontal' title='Tra cứu văn bằng' href='https://neu.edu.vn/module/tracuuvb'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Tra cứu văn bằng</a></li><li  class=''><a class='wobble-horizontal' title='Lấy ý kiến người học' href='https://esurvey.neu.edu.vn/Login.aspx'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Lấy ý kiến người học</a></li><li  class=''><a class='wobble-horizontal' title='Quản lý giảng đường' href='https://qlgd.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Quản lý giảng đường</a></li><li  class=''><a class='wobble-horizontal' title='NEU Book' href='https://neubook.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>NEU Book</a></li></ul></li><li><a  >Đảng - Đoàn thể<span class='caret'></span></a><ul class='dropdown-menu'><li  class=''><a class='wobble-horizontal' title='Đảng bộ' href='https://cpv.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Đảng bộ</a></li><li class=''><a class='wobble-horizontal' title='Công đoàn'><span class='fa fa-angle-double-right' aria-hidden='true'></span>Công đoàn<span class='caret'></span></a><ul class='dropdown-menu'><li   class=''><a class='wobble-horizontal' title='Website công đoàn' href='https://congdoan.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Website công đoàn</a></li><li   class=''><a class='wobble-horizontal' title='Tin công đoàn' href='/vi/tin-cong-doan'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Tin công đoàn</a></li></ul></li><li  class=''><a class='wobble-horizontal' title='Đoàn Thanh Niên' href='https://youth.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Đoàn Thanh Niên</a></li><li  class=''><a class='wobble-horizontal' title='Hội sinh viên' href='https://hoisinhvien.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Hội sinh viên</a></li><li  class=''><a class='wobble-horizontal' title='Hội cựu Chiến binh' href='https://hoiccb.neu.edu.vn/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Hội cựu Chiến binh</a></li></ul></li><li><a  >Thông Báo - Tin Tức<span class='caret'></span></a><ul class='dropdown-menu'><li  class=''><a class='wobble-horizontal' title='Thông báo' href='/vi/thong-bao-1424'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Thông báo</a></li><li  class=''><a class='wobble-horizontal' title='Phòng chống dịch bệnh' href='/vi/phong-chong-dich-virus-covid-19'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Phòng chống dịch bệnh</a></li><li  class=''><a class='wobble-horizontal' title='Thông báo tuyển sinh' href='https://neu.edu.vn/vi/tuyen-sinh-nam'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Thông báo tuyển sinh</a></li><li  class=''><a class='wobble-horizontal' title='Thông tin kinh tế' href='/vi/thong-tin-kinh-te'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Thông tin kinh tế</a></li><li  class=''><a class='wobble-horizontal' title='Bản tin nội bộ' href='https://neu.edu.vn/vi/ban-tin-noi-bo'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Bản tin nội bộ</a></li><li  class=''><a class='wobble-horizontal' title='Văn bản mới - Chính sách mới' href='/vi/van-ban-moi-chinh-sach-moi'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Văn bản mới - Chính sách mới</a></li><li  class=''><a class='wobble-horizontal' title='QUỐC HỘI XV' href='https://neu.edu.vn/vi/quoc-hoi-xv/'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>QUỐC HỘI XV</a></li><li  class=''><a class='wobble-horizontal' title='Mục tiêu Phát triển Bền vững (SDGs)' href='/vi/muc-tieu-phat-trien-ben-vung-sdgs'> <span class='fa fa-angle-double-right' aria-hidden='true'></span>Mục tiêu Phát triển Bền vững (SDGs)</a></li></ul></li><li ><a href='/vi/cau-chuyen-neu'>Câu chuyện NEU</a></li>
+									</ul>
+								</div>
+								<!--/.nav-collapse -->
+                                	<!-- search-mobile -->
+								<div class="row btn-mobileSearch">
+									<div class="col-xs-12 visible-xs">
+										<div class="navbar-collapse collapse search-collapse">
+											<div class="nav navbar-nav search-mobile">
+												<div class="form-group customSearch">								
+													<div class="input-group">
+														<input type="text" class="form-control" id="txtSearchArticleMB" value="" onkeydown="return SearchProcess(event,document.getElementById('txtSearchArticleMB').value);" placeholder="Search...">
+														<span class="btn input-group-addon danger" onclick="OnSearch(document.getElementById('txtSearchArticleMB').value);"><span class="fa fa-search"></span></span>
+													</div>
+												</div>						
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>				
+						</div>
+						<!-- /.navbar -->
+					</div>
+					<!-- ./top-menu -->	
+				</div>
+			</div>					
+		</header>
+
+
+				</div>
+			</div>
+		</div>
+	</div><div id="psc-divPanelMid">
+		<div id="psc-divPanelCenter" style="width:100%;float:left">
+			<div id="psc-divPanelCenter-Content" style="min-height: 30px;">
+				<div id="psc-divPortlet-b6d0fb2f-58b6-4837-a25c-f3b062fed429" class="psc-divPortlet-Wrapper" style="">
+					<div class="psc-divPortlet-Content">
+						
+
+
+
+
+
+
+
+<div class="ticker_headline width-common">
+			<div class="container">
+				<div class="news_feed">
+					<p class="newsfeed_label"><a href="/vi/dang-tuyen-sinh">Đang tuyển sinh</a></p>
+					<ul id="ticker01">
+                         
+						<li><span class="fa fa-angle-double-right" aria-hidden="true"></span><a href="/vi/dang-tuyen-sinh/thong-bao-tuyen-sinh-cao-hoc-viet-nam-ha-lan-dot-2-nam-2023">Thông báo Tuyển sinh Cao học Việt Nam - Hà Lan Đợt 2, năm 2023</a></li>
+						
+						<li><span class="fa fa-angle-double-right" aria-hidden="true"></span><a href="https://stie.neu.edu.vn/thong-bao-tuyen-sinh-khoa-3-nam-2022-chuong-trinh-lien-ket-dao-tao-cu-nhan-kinh-doanh-giua-truong-dai-hoc-kinh-te-quoc-dan-va-dai-hoc-waikato-new-zealand-1215.html">Thông báo tuyển sinh Khoá 3 năm 2023, Chương trình liên kết đào tạo Cử nhân Kinh doanh giữa Trường Đại học Kinh tế Quốc dân và Đại học Waikato, New Zealand</a></li>
+						
+						<li><span class="fa fa-angle-double-right" aria-hidden="true"></span><a href="https://saa.neu.edu.vn/gioi-thieu-chuong-trinh-cu-nhan-quoc-te-bifa-2023.html">CHƯƠNG TRÌNH CỬ NHÂN QUỐC TẾ BIFA 2023</a></li>
+						
+						<li><span class="fa fa-angle-double-right" aria-hidden="true"></span><a href="/vi/dang-tuyen-sinh/thong-bao-tuyen-sinh-chuong-trinh-cu-nhan-quoc-te-ibd-neu-khoa-19-ky-mua-thu-2023-1731">Thông báo Tuyển sinh Chương trình Cử nhân Quốc tế IBD@NEU  Khóa 19, Kỳ Mùa Thu 2023</a></li>
+						
+						<li><span class="fa fa-angle-double-right" aria-hidden="true"></span><a href="/vi/dang-tuyen-sinh/chuong-trinh-cu-nhan-quoc-te-tai-chinh-va-quan-ly-la-trobe-neu-truong-dai-hoc-kinh-te-quoc-dan-va-truong-dai-hoc-la-trobe-uc-1659">Chương trình cử nhân quốc tế Tài chính và Quản lý La Trobe-NEU Trường Đại học Kinh tế quốc dân và Trường Đại học La Trobe Úc</a></li>
+						
+						<li><span class="fa fa-angle-double-right" aria-hidden="true"></span><a href="/vi/dang-tuyen-sinh/thong-bao-tuyen-sinh-trinh-do-dai-hoc-vua-lam-vua-hoc-khoa-56-nam-2023-5156">THÔNG BÁO TUYỂN SINH TRÌNH ĐỘ ĐẠI HỌC VỪA LÀM VỪA HỌC - KHOÁ 56 NĂM 2023</a></li>
+						
+                    </ul>
+				</div>
+			</div>
+		</div>
+		<!-- /.ticker_headline -->
+					</div>
+				</div><div id="psc-divPortlet-fc49bf68-0d1f-4c8c-9dca-86b6b1c6b85e" class="psc-divPortlet-Wrapper" style="">
+					<div class="psc-divPortlet-Content">
+						
+
+
+<div class="main-content width-common VideoBanner">
+    <div class="container flexbox-main">
+        <div class="left">
+            <!-- Tin nổi bật -->
+            <div class="box box-1">
+                <div class="box-content VideoCallBack">
+                    <div class="slider-call">
+                         <div class="articles owl-carousel owl-theme">
+                        
+                                <article class="article-special">
+                                    <div class="thumb">
+                                        <img src="/Temp/ArticleImage/8300699d-212a-4043-a52f-afc2910c96d9.jpg" alt="670x430" />
+
+                                    </div>
+                                    <div class="box-description">
+                                        <h3><a href="/vi/tin-tuc-moi-nhat/le-khai-giang-va-trao-bang-tien-si-nam-2023" class="article-special-title">Lễ khai giảng và trao bằng Tiến sĩ năm 2023</a></h3>
+
+                                    </div>
+
+                                </article>
+
+                            
+                                <article class="article-special">
+                                    <div class="thumb">
+                                        <img src="/Temp/ArticleImage/31c056ef-1ad8-48b3-bf96-1e2e3e05e73a.jpg" alt="670x430" />
+
+                                    </div>
+                                    <div class="box-description">
+                                        <h3><a href="/vi/tin-tuc-moi-nhat/ban-tin-kh-cn-neu-quy-iii-nam-2023-4402" class="article-special-title">BẢN TIN KH&CN NEU - QUÝ III NĂM 2023</a></h3>
+
+                                    </div>
+
+                                </article>
+
+                            
+                                <article class="article-special">
+                                    <div class="thumb">
+                                        <img src="/Temp/ArticleImage/ea8c9bae-e1e6-4a2e-a51a-3a92ded463d0.JPG" alt="670x430" />
+
+                                    </div>
+                                    <div class="box-description">
+                                        <h3><a href="/vi/tin-tuc-moi-nhat/128-van-dong-vien-tranh-tai-tai-giai-vo-taekwondo-truyen-thong-dai-hoc-kinh-te-quoc-dan-nam-2023" class="article-special-title">128 vận động viên tranh tài tại giải Võ Taekwondo truyền thống Đại học Kinh tế Quốc dân năm 2023</a></h3>
+
+                                    </div>
+
+                                </article>
+
+                            
+                                <article class="article-special">
+                                    <div class="thumb">
+                                        <img src="/Temp/ArticleImage/9d7d8e1b-d577-4e7f-a806-bdc62264bd6d.jpg" alt="670x430" />
+
+                                    </div>
+                                    <div class="box-description">
+                                        <h3><a href="/vi/tin-tuc-moi-nhat/le-xuat-quan-doi-tuyen-bong-da-nam-truong-dai-hoc-kinh-te-quoc-dan-tham-du-giai-bong-da-sinh-vien-7-nguoi-toan-quoc-nam-2023" class="article-special-title">Lễ xuất quân đội tuyển bóng đá nam Trường Đại học Kinh tế Quốc dân tham dự Giải bóng đá sinh viên 7 người toàn quốc năm 2023</a></h3>
+
+                                    </div>
+
+                                </article>
+
+                            
+                                <article class="article-special">
+                                    <div class="thumb">
+                                        <img src="/Temp/ArticleImage/d2963e08-c49c-4f60-acbb-97432c0d76dc.JPG" alt="670x430" />
+
+                                    </div>
+                                    <div class="box-description">
+                                        <h3><a href="/vi/tin-tuc-moi-nhat/hoc-vien-lop-thac-si-dieu-hanh-cao-cap-executive-mba-khoa-11-12-tham-van-va-khao-sat-thuc-te-tai-cong-ty-co-phan-xuat-nhap-khau-thuy-san-can-tho-caseamex" class="article-special-title">Học viên lớp Thạc sĩ Điều hành cao cấp Executive - MBA khoá 11, 12 tham vấn và khảo sát thực tế tại Công ty Cổ phần Xuất nhập khẩu Thủy sản Cần Thơ - Caseamex</a></h3>
+
+                                    </div>
+
+                                </article>
+
+                            
+                                <article class="article-special">
+                                    <div class="thumb">
+                                        <img src="/Temp/ArticleImage/31167ed2-7e89-40bb-ae40-c7ddd8e0fa7b.JPG" alt="670x430" />
+
+                                    </div>
+                                    <div class="box-description">
+                                        <h3><a href="/vi/tin-tuc-moi-nhat/le-khai-giang-khoa-3-chuong-trinh-lien-ket-dao-tao-cu-nhan-kinh-doanh-bbus-giua-truong-dai-hoc-kinh-te-quoc-dan-va-dai-hoc-dai-hoc-waikato-new-zealand-0926" class="article-special-title">Lễ khai giảng khóa 3 Chương trình liên kết đào tạo cử nhân kinh doanh (BBUS) giữa Trường Đại học Kinh tế Quốc dân và Đại học Đại học Waikato, New Zealand</a></h3>
+
+                                    </div>
+
+                                </article>
+
+                            
+                                <article class="article-special">
+                                    <div class="thumb">
+                                        <img src="/Temp/ArticleImage/35b74777-803c-42a4-961c-7987f2a74e01.JPG" alt="670x430" />
+
+                                    </div>
+                                    <div class="box-description">
+                                        <h3><a href="/vi/tin-tuc-moi-nhat/toa-dam-dinh-huong-phat-trien-ben-vung-cong-ty-co-phan-xuat-nhap-khau-thuy-san-can-tho-caseamex-trong-chuong-trinh-hoc-tap-thuc-te-danh-cho-cac-hoc-vien-executive-mba" class="article-special-title">Tọa đàm "Định hướng phát triển bền vững Công ty Cổ phần Xuất nhập khẩu Thủy sản Cần Thơ - Caseamex" trong chương trình học tập thực tế dành cho các học viên Executive - MBA</a></h3>
+
+                                    </div>
+
+                                </article>
+
+                            
+
+                    </div>
+                    </div>
+                   
+                </div>
+            </div>
+            <!-- /.box-1 -->
+        </div>
+        <!-- /.left -->
+        <div class="right" style="">
+            <!-- 5 objects -->
+            <div class="box box-2">
+                <div class="box-content">
+                    <a href="/sinh-vien-tuong-lai">
+                        <p>
+                            <img src="/Resources/ImagesPortal/HomePage/imgs/objects/icon-sv-tuong-lai.png" alt="SV tương lai" /></p>
+                        <p>SV tương lai</p>
+                    </a>
+                    <a href="/can-bo-neu">
+                        <p>
+                            <img src="/Resources/ImagesPortal/HomePage/imgs/objects/icon-Can-bo.png" alt="Cán bộ" /></p>
+                        <p>Cán bộ</p>
+                    </a>
+                    <a href="/sinh-vien-neu">
+                        <p>
+                            <img src="/Resources/ImagesPortal/HomePage/imgs/objects/icon-SV.png" alt="Sinh viên" /></p>
+                        <p>Sinh viên</p>
+                    </a>
+                    <a href="http://alumni.neu.edu.vn/">
+                        <p>
+                            <img src="/Resources/ImagesPortal/HomePage/imgs/objects/icon-cuu-sv.png" alt="Cựu SV" /></p>
+                        <p>Cựu SV</p>
+                    </a>
+                    <a href="/vi/doi-tac-hop-tac">
+                        <p>
+                            <img src="/Resources/ImagesPortal/HomePage/imgs/objects/icon-Doi-tac.png" alt="Đối tác" /></p>
+                        <p>Đối tác</p>
+                    </a>
+                    <a href="/vi/cong-bo-quoc-te">
+                        <p>
+                            <img src="/Resources/ImagesPortal/HomePage/imgs/objects/icon-congboquocte.png" alt="Công bố quốc tế" /></p>
+                        <p>Công bố quốc tế</p>
+                    </a>
+                </div>
+            </div>
+            <!-- Bản tin NEU -->
+            <div class="en-tabs">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="active"><a class="header-big" href="#neu-news" role="tab" data-toggle="tab">Bản Tin NEU</a></li>
+                    <li><a class="header-big" href="#Upcomming-events" role="tab" data-toggle="tab">Bản Tin Đơn Vị</a></li>
+                    <li><a class="header-big" href="#Upcomming-events2" role="tab" data-toggle="tab">Sự kiện</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="neu-news">
+                        <br>
+                        <!-- Bản tin NEU -->
+                        <div class="box box-3">
+                            <div id="listbox-scroll" class="box-content mCustomScrollbar">
+                                <div class="articles">
+                                    
+                                            <article>
+                                                <a href="/vi/ban-tin-neu/128-van-dong-vien-tranh-tai-tai-giai-vo-taekwondo-truyen-thong-dai-hoc-kinh-te-quoc-dan-nam-2023">
+                                                    <p class="article-thumb">
+                                                        <img src="/Temp/ArticleImage/ea8c9bae-e1e6-4a2e-a51a-3a92ded463d0.JPG" alt="270x182-2"></p>
+                                                    <div class="article-content">
+                                                        <p class="article-title dot-dot-dot">128 vận động viên tranh tài tại giải Võ Taekwondo truyền thống Đại học Kinh tế Quốc dân năm 2023</p>
+                                                        <p class="date" style="display:none"><span class=" fa fa-clock-o"></span>03 tháng 10, 2023</p>
+                                                    </div>
+                                                </a>
+                                            </article>
+                                        
+                                            <article>
+                                                <a href="/vi/ban-tin-neu/le-xuat-quan-doi-tuyen-bong-da-nam-truong-dai-hoc-kinh-te-quoc-dan-tham-du-giai-bong-da-sinh-vien-7-nguoi-toan-quoc-nam-2023">
+                                                    <p class="article-thumb">
+                                                        <img src="/Temp/ArticleImage/9d7d8e1b-d577-4e7f-a806-bdc62264bd6d.jpg" alt="270x182-2"></p>
+                                                    <div class="article-content">
+                                                        <p class="article-title dot-dot-dot">Lễ xuất quân đội tuyển bóng đá nam Trường Đại học Kinh tế Quốc dân tham dự Giải bóng đá sinh viên 7 người toàn quốc năm 2023</p>
+                                                        <p class="date" style="display:none"><span class=" fa fa-clock-o"></span>03 tháng 10, 2023</p>
+                                                    </div>
+                                                </a>
+                                            </article>
+                                        
+                                            <article>
+                                                <a href="/vi/ban-tin-neu/hoc-vien-lop-thac-si-dieu-hanh-cao-cap-executive-mba-khoa-11-12-tham-van-va-khao-sat-thuc-te-tai-cong-ty-co-phan-xuat-nhap-khau-thuy-san-can-tho-caseamex">
+                                                    <p class="article-thumb">
+                                                        <img src="/Temp/ArticleImage/d2963e08-c49c-4f60-acbb-97432c0d76dc.JPG" alt="270x182-2"></p>
+                                                    <div class="article-content">
+                                                        <p class="article-title dot-dot-dot">Học viên lớp Thạc sĩ Điều hành cao cấp Executive - MBA khoá 11, 12 tham vấn và khảo sát thực tế tại Công ty Cổ phần Xuất nhập khẩu Thủy sản Cần Thơ - Caseamex</p>
+                                                        <p class="date" style="display:none"><span class=" fa fa-clock-o"></span>25 tháng 09, 2023</p>
+                                                    </div>
+                                                </a>
+                                            </article>
+                                        
+                                            <article>
+                                                <a href="/vi/ban-tin-neu/le-khai-giang-khoa-3-chuong-trinh-lien-ket-dao-tao-cu-nhan-kinh-doanh-bbus-giua-truong-dai-hoc-kinh-te-quoc-dan-va-dai-hoc-dai-hoc-waikato-new-zealand-0926">
+                                                    <p class="article-thumb">
+                                                        <img src="/Temp/ArticleImage/31167ed2-7e89-40bb-ae40-c7ddd8e0fa7b.JPG" alt="270x182-2"></p>
+                                                    <div class="article-content">
+                                                        <p class="article-title dot-dot-dot">Lễ khai giảng khóa 3 Chương trình liên kết đào tạo cử nhân kinh doanh (BBUS) giữa Trường Đại học Kinh tế Quốc dân và Đại học Đại học Waikato, New Zealand</p>
+                                                        <p class="date" style="display:none"><span class=" fa fa-clock-o"></span>02 tháng 10, 2023</p>
+                                                    </div>
+                                                </a>
+                                            </article>
+                                        
+                                     <p><a class="other-article" href="/vi/ban-tin-neu">Xem các tin khác</a></p>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        
+                    </div>
+
+                    <div class="tab-pane fade in" id="Upcomming-events">
+                        <br>
+                        <!-- Bản tin NEU -->
+                        <div class="box box-3">
+                            <div id="listbox-scroll" class="box-content mCustomScrollbar">
+                                <div class="articles">
+                                    
+                                            <article>
+                                                <a href="/vi/ban-tin-don-vi/hanh-trinh-ruc-ro-orientation-week-2023-chao-don-tan-sinh-vien-ibd-neu-khoa-19">
+                                                    <p class="article-thumb">
+                                                        <img src="/Temp/ArticleImage/f7d08d9f-3a8e-4b33-847b-c3444eeccb3f.jpg"></p>
+                                                    <div class="article-content">
+                                                        <p class="article-title dot-dot-dot ">Hành trình rực rỡ Orientation Week 2023 – Chào đón Tân sinh viên IBD@NEU khóa 19</p>
+                                                        <p class="date" style="display:none"><span class=" fa fa-clock-o"></span>04 tháng 10, 2023</p>
+                                                    </div>
+                                                </a>
+                                            </article>
+                                        
+                                            <article>
+                                                <a href="/vi/ban-tin-don-vi/chuyen-khao-sat-chuoi-gia-tri-che-la-bang-huyen-dai-tu-tinh-thai-nguyen-5250">
+                                                    <p class="article-thumb">
+                                                        <img src="/Temp/ArticleImage/6910f56e-2092-4b34-9568-3e0045e87045.jpg"></p>
+                                                    <div class="article-content">
+                                                        <p class="article-title dot-dot-dot ">Chuyến khảo sát chuỗi giá trị Chè La Bằng, huyện Đại Từ, tỉnh Thái Nguyên</p>
+                                                        <p class="date" style="display:none"><span class=" fa fa-clock-o"></span>17 tháng 09, 2023</p>
+                                                    </div>
+                                                </a>
+                                            </article>
+                                        
+                                            <article>
+                                                <a href="/vi/ban-tin-don-vi/chuong-trinh-danh-rieng-cho-thi-sinh-chuong-trinh-ibd-neu-lua-chon-chu-dong-2023-co-hoi-the-hien-ca-tinh-qua-nhung-trai-nghiem">
+                                                    <p class="article-thumb">
+                                                        <img src="/Temp/ArticleImage/e1bcd1d1-7355-41e0-b78b-af0134250c82.jpg"></p>
+                                                    <div class="article-content">
+                                                        <p class="article-title dot-dot-dot ">Chương trình dành riêng cho Thí sinh Chương trình IBD@NEU: Lựa chọn chủ động 2023 – Cơ hội thể hiện cá tính qua những trải nghiệm</p>
+                                                        <p class="date" style="display:none"><span class=" fa fa-clock-o"></span>30 tháng 08, 2023</p>
+                                                    </div>
+                                                </a>
+                                            </article>
+                                        
+                                            <article>
+                                                <a href="/vi/ban-tin-don-vi/csv-khoa-46-truong-dai-hoc-kinh-te-quoc-dan-tai-tro-xay-dung-diem-truong-mam-non-tai-ban-ta-dong-xa-cao-pha-huyen-mu-cang-chai-tinh-yen-bai">
+                                                    <p class="article-thumb">
+                                                        <img src="/Temp/ArticleImage/7b0872d9-0935-4167-8684-ec9d7cd41dae.jpg"></p>
+                                                    <div class="article-content">
+                                                        <p class="article-title dot-dot-dot ">CSV Khóa 46, Trường Đại học Kinh tế Quốc dân tài trợ xây dựng điểm trường mầm non tại Bản Tà Dông, xã Cao Phạ, huyện Mù Cang Chải, tỉnh Yên Bái</p>
+                                                        <p class="date" style="display:none"><span class=" fa fa-clock-o"></span>23 tháng 08, 2023</p>
+                                                    </div>
+                                                </a>
+                                            </article>
+                                        
+
+                                </div>
+                               <p><a class="other-article" href="/vi/ban-tin-don-vi">Xem các tin khác</a></p>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade in" id="Upcomming-events2">
+                        <br>
+                        <!-- Bản tin NEU -->
+                        <div class="box box-3">
+                            <div id="listbox-scroll" class="box-content mCustomScrollbar">
+                                <div class="articles">
+                                    
+                                            <article>
+                                                <a href="/vi/su-kien/le-khai-giang-va-trao-bang-tien-si-nam-2023">
+                                                    <div class="date-month">
+								                        <span class="d">06</span>
+								                        <span class="m">tháng 10</span>
+							                        </div>
+                                                    <div class="article-content">
+                                                        <p class="article-title dot-dot-dot ">Lễ khai giảng và trao bằng Tiến sĩ năm 2023</p>
+                                                    </div>
+                                                </a>
+                                            </article>
+                                        
+                                            <article>
+                                                <a href="/vi/su-kien/gioi-thieu-thong-tin-tuyen-sinh-thac-si-dot-2-nam-2023">
+                                                    <div class="date-month">
+								                        <span class="d">11</span>
+								                        <span class="m">tháng 08</span>
+							                        </div>
+                                                    <div class="article-content">
+                                                        <p class="article-title dot-dot-dot ">Giới thiệu thông tin tuyển sinh thạc sĩ đợt 2 năm 2023</p>
+                                                    </div>
+                                                </a>
+                                            </article>
+                                        
+                                            <article>
+                                                <a href="/vi/su-kien/buoi-gioi-thieu-thong-tin-tuyen-sinh-chuong-trinh-thac-si-quoc-te-imd-neu-info-session-nam-2023">
+                                                    <div class="date-month">
+								                        <span class="d">14</span>
+								                        <span class="m">tháng 07</span>
+							                        </div>
+                                                    <div class="article-content">
+                                                        <p class="article-title dot-dot-dot ">Buổi giới thiệu thông tin tuyển sinh Chương trình Thạc sĩ Quốc tế IMD@NEU - Info Session năm 2023</p>
+                                                    </div>
+                                                </a>
+                                            </article>
+                                        
+                                            <article>
+                                                <a href="/vi/su-kien/vien-dao-tao-quoc-te-ngay-hoi-gioi-thieu-thong-tin-tuyen-sinh-isme-open-day-23-7-2023">
+                                                    <div class="date-month">
+								                        <span class="d">11</span>
+								                        <span class="m">tháng 07</span>
+							                        </div>
+                                                    <div class="article-content">
+                                                        <p class="article-title dot-dot-dot ">Viện Đào tạo Quốc tế - Ngày hội Giới thiệu thông tin tuyển sinh ISME Open Day 23/7/2023</p>
+                                                    </div>
+                                                </a>
+                                            </article>
+                                        
+
+                                </div>
+								 <p><a class="other-article" href="/vi/su-kien">Xem các tin khác</a></p>
+                            </div>
+                           </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- /.right -->
+    </div>
+</div>
+<div id="hen-gioc">
+
+</div>
+
+
+
+
+<!-- <script> -->
+    <!-- pscjq(document).ready(function () { -->
+
+        <!-- pscjq(".owl-carousel").owlCarousel({ -->
+
+            <!-- autoPlay: 3000, //Set AutoPlay to 3 seconds -->
+            <!-- autoplay: true, -->
+            <!-- nav: false, -->
+            <!-- navigation: false, -->
+            <!-- navigationText: ["prevs", "nexts"], -->
+            <!-- rewindNav: true, -->
+            <!-- scrollPerPage: false, -->
+            <!-- dots: false, -->
+            <!-- loop: true, -->
+            <!-- items: 1, -->
+        <!-- }); -->
+        <!-- pscjq("#listbox-scroll").mCustomScrollbar({ -->
+            <!-- autoHideScrollbar: true, -->
+            <!-- scrollInertia: 1000, -->
+        <!-- }); -->
+        
+    <!-- }); -->
+<!-- </script> -->
+
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div><div id="psc-divPanelBottom" style="width:100%;float:left">
+		<div id="psc-divPanelBottom-Content" style="min-height: 30px;">
+			<div id="psc-divPortlet-ebd1b7a7-36a3-4261-8558-19a44bfda6c3" class="psc-divPortlet-Wrapper" style="">
+				<div class="psc-divPortlet-Content">
+					<div class="doi-tac doi-tac-title  width-common">
+<div class="container">
+<div class="box box-4">
+<div class="box-header">
+<span class="header-normal">Li&ecirc;n Kết</span>
+<a href="javascript:;" class="btn-sider prev"><span class="fa fa-angle-left" aria-hidden="true"></span></a>
+<a href="javascript:;" class="btn-sider next"><span class="fa fa-angle-right" aria-hidden="true"></span></a>
+</div>
+</div>
+</div>
+</div>
+
+				</div>
+			</div><div id="psc-divPortlet-6fadfc79-1a7a-4ab0-997f-6065be407a5a" class="psc-divPortlet-Wrapper" style="">
+				<div class="psc-divPortlet-Content">
+					
+
+
+	<!-- Đối tác hợp tác -->
+		<div class="doi-tac width-common" >
+			<div class="container">
+				<div class="box box-4">
+				
+					<div class="box-content">
+						<div class="images owl-carousel owl-theme">
+                            
+							<a href="https://neu.edu.vn/vi/dang-tuyen-sinh/chuong-trinh-cu-nhan-quoc-te-tai-chinh-va-quan-ly-la-trobe-neu-truong-dai-hoc-kinh-te-quoc-dan-va-truong-dai-hoc-la-trobe-uc-1659" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/latrop270.jpg" alt="150x84" /></a>
+							  
+							<a href="https://stie.neu.edu.vn/thong-bao-tuyen-sinh-khoa-3-nam-2022-chuong-trinh-lien-ket-dao-tao-cu-nhan-kinh-doanh-giua-truong-dai-hoc-kinh-te-quoc-dan-va-dai-hoc-waikato-new-zealand-1215.html" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/tsvientm2023.png" alt="150x84" /></a>
+							  
+							<a href="https://isd.neu.edu.vn/category/thong-bao/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/isdtuyensinh1.png" alt="150x84" /></a>
+							  
+							<a href="https://cait-ts.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/phantichdulieu.png" alt="150x84" /></a>
+							  
+							<a href="https://neu.edu.vn/vi/dang-tuyen-sinh/tuyen-sinh-chuong-trinh-thac-sy-dieu-hanh-quan-tri-kinh-doanh-quoc-te-thac-sy-pgsm-khoa-9-3301" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/thumbnail_banner.png" alt="150x84" /></a>
+							  
+							<a href="http://ciemb.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/banner ciemb 2023-CMYK.jpg" alt="150x84" /></a>
+							  
+							<a href="http://isd.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/vienptbv2022.jpg" alt="150x84" /></a>
+							  
+							<a href="http://sdh.neu.edu.vn/danh-muc/tien-si-dai-hoc-lincoln.html" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/Tien_si_Lincoln.jpg" alt="150x84" /></a>
+							  
+							<a href="https://moet.gov.vn/Pages/home.aspx" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/bogddt.jpg" alt="150x84" /></a>
+							  
+							<a href="http://dec.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/bannerDTTX.jpg" alt="150x84" /></a>
+							  
+							<a href="http://icfaa.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/bannerhoithaokt.jpg" alt="150x84" /></a>
+							  
+							<a href="https://fbm.neu.edu.vn/cu-nhan-quan-tri-chat-luong-va-doi-moi-bang-tieng-anh-emqi/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/thumbnail_IMG_2074.png" alt="150x84" /></a>
+							  
+							<a href="http://fbm.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/khoaqtkd.png" alt="150x84" /></a>
+							  
+							<a href="https://khoakhpt.neu.edu.vn/vi/tuyen-sinh-2469/thong-tin-tuyen-sinh-khoa-ke-hoach-phat-trien-2020" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/tvts-khpt.png" alt="150x84" /></a>
+							  
+							<a href="http://www.aep.neu.edu.vn/web/vn/index.html" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/bannertscttt.png" alt="150x84" /></a>
+							  
+							<a href="https://vienthuongmaikinhtequocte.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/vietntmktqtsmall.png" alt="150x84" /></a>
+							  
+							<a href="http://mfe.edu.vn/tuyen-sinh/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/Banner_For_NEU_2.png" alt="150x84" /></a>
+							  
+							<a href="http://mfe.edu.vn/tuyen-sinh/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/Banner_For_NEU_1.png" alt="150x84" /></a>
+							  
+							<a href="http://khoamarketing.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/TS_KhoaMarketing.png" alt="150x84" /></a>
+							  
+							<a href="https://sbf.neu.edu.vn/vi/tuyen-sinh-2020" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/tsdh03-01.png" alt="150x84" /></a>
+							  
+							<a href="http://mde.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/BannerTSCaoHocVN-HL.png" alt="150x84" /></a>
+							  
+							<a href="https://economics.neu.edu.vn/vi/dao-tao-934/chuong-trinh-cu-nhan-kinh-te-hoc-tai-chinh" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/BannerTSChuongTrinhlienket.png" alt="150x84" /></a>
+							  
+							<a href="https://economics.neu.edu.vn/vi/dao-tao-934/chuong-trinh-cu-nhan-kinh-te-hoc-tai-chinh-hoc-bang-tieng-anh" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/Banner TSKinhTeTaiChinhHocBangTA.png" alt="150x84" /></a>
+							  
+							<a href="https://economics.neu.edu.vn/vi/dao-tao-934/cu-nhan-kinh-te-chuyen-sau-kinh-te-hoc" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/BannerTSCQDHKTQD.png" alt="150x84" /></a>
+							  
+							<a href="http://bsneu.neu.edu.vn/ctdh/chuong-trinh-e-bdb/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/E-BDB KINH DOANH SO 2020.png" alt="150x84" /></a>
+							  
+							<a href="https://bsneu.neu.edu.vn/chuong-trinh/chuong-trinh-e-bba/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/E-BBA QUAN TRI KINH DOANH 2020.png" alt="150x84" /></a>
+							  
+							<a href="https://khoaquanlynguonnhanluc.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/khoaktqlnnl.png" alt="150x84" /></a>
+							  
+							<a href="https://khql.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/KHQL.png" alt="150x84" /></a>
+							  
+							<a href="https://www.facebook.com/tsdlksneu/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/tuyen sinh du lich.png" alt="150x84" /></a>
+							  
+							<a href="https://khoathongke.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/khoa thong ke.png" alt="150x84" /></a>
+							  
+							<a href="http://chuongtrinhdaotao.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/decuongmhvb2cq.png" alt="150x84" /></a>
+							  
+							<a href="https://fintech.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/Banner Fintech.png" alt="150x84" /></a>
+							  
+							<a href="https://khoabaohiem.neu.edu.vn/vi/tuyen-sinh-1652" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/khoabh.png" alt="150x84" /></a>
+							  
+							<a href="https://neu.edu.vn/vi/dang-tuyen-sinh/thong-bao-tuyen-sinh-cac-lop-ung-dung-cong-nghe-thong-tin-co-ban-thang-11-2019-0236" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/qc web truong 2017.png" alt="150x84" /></a>
+							  
+							<a href="http://chuongtrinhdaotao.neu.edu.vn/ " target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/decuongmonhoctv.png" alt="150x84" /></a>
+							  
+							<a href="http://curriculum.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/decuongtienganh.png" alt="150x84" /></a>
+							  
+							<a href="http://chuongtrinhdaotao.neu.edu.vn/indexCDR.aspx" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/Untitled-4.png" alt="150x84" /></a>
+							  
+							<a href="http://isme.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/coverTS2023.jpg" alt="150x84" /></a>
+							  
+							<a href="http://sdh.neu.edu.vn/?id=227226" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/NEU_DTSDH.png" alt="150x84" /></a>
+							  
+							<a href="http://trungtamngoainguneu.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/bannerTTNN.png" alt="150x84" /></a>
+							  
+							<a href="http://apim.neu.edu.vn" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/vienqlcaTBD.png" alt="150x84" /></a>
+							  
+							<a href="http://saa.neu.edu.vn/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/vienketoan.png" alt="150x84" /></a>
+							  
+							<a href="http://epmp.khql-neu.edu.vn" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/EPMP.png" alt="150x84" /></a>
+							  
+							<a href="http://www.cfvg.org/" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/ct_img_6.png" alt="150x84" /></a>
+							  
+							<a href=" http://ktpt.edu.vn" target="_blank" ><img src="/Resources/imagesPortlet/6fadfc79-1a7a-4ab0-997f-6065be407a5a/ct_img_5.png" alt="150x84" /></a>
+							  
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>
+				</div>
+			</div><div id="psc-divPortlet-109a7a7c-004d-43dd-8069-b4e78bdb5bec" class="psc-divPortlet-Wrapper" style="">
+				<div class="psc-divPortlet-Content">
+					<footer class="width-common">
+<div class="container">
+<div class="footer">
+<div class="f-1 col-xs-12 col-sm-7 col-md-7">
+<div class="footer-item">
+<p>&nbsp;</p>
+<p>Copyright &copy; 2016 - Trường Đại học Kinh tế Quốc d&acirc;n. All Rights Reserved</p>
+<div class="footer-content">
+<p><span class="fa fa-home"></span>207 Giải Ph&oacute;ng, Đồng T&acirc;m, Quận Hai B&agrave; Trưng, H&agrave; Nội, Việt Nam</p>
+<div class="width-common">
+<p><span class="fa fa-phone"></span>(84)24.36.280.280   &nbsp;&nbsp;&nbsp;  <span class="fa fa-fax"></span>(84)24.38.695.992 &nbsp;&nbsp;&nbsp; <a href="https://360.neu.edu.vn/">https://360.neu.edu.vn/</a></p>
+</div>
+</div>
+</div>
+</div>
+<div style="margin-bottom: 5px;" class="f-2 col-xs-12 col-sm-5 col-md-5">
+<div class="footer-item">
+<div class="socials">
+<img alt="" style="width: 81px; height: 81px;" src="/Resources/ImagesPortal/HomePage/imgs/red.png" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="https://www.facebook.com/ktqdNEU/"><span aria-hidden="true" class="fa fa-facebook"></span></a>
+<a href="https://www.youtube.com/channel/UCV24tBVKuhkSC1kd36FbvmA"><span aria-hidden="true" class="fa fa-youtube"></span></a>
+<a href="https://twitter.com/DaiHocKTQD"><span aria-hidden="true" class="fa fa-twitter"></span></a>
+<a href="https://moet.gov.vn/Pages/home.aspx"><img alt="" style="width: 81px; height: 81px;" src="/Resources/Images/SubDomain/HomePage/LOGO/logobgdvadt.png" /> </a>
+</div>
+<div class="design-by">
+<a href="http://psctelecom.com.vn/">
+<span class="text">Designed and Developed by </span>
+<img alt="PSC" src="/Resources/ImagesPortal/HomePage/imgs/logo_PSC_W.png" />
+</a>
+</div>
+</div>
+<div class="footer-item">
+<p style="padding-top: 5px;">Mọi đ&oacute;ng g&oacute;p xin gửi về: <a href="mailto:ask-cait@neu.edu.vn">ask-cait@neu.edu.vn</a> |<br />
+<a href="mailto:dhktqd@neu.edu.vn">dhktqd@neu.edu.vn</a></p>
+</div>
+</div>
+</div>
+<!-- /.footer -->
+</div>
+</footer>
+
+				</div>
+			</div><div id="psc-divPortlet-37c61afc-d612-42d2-ac60-7e4d800184ed" class="psc-divPortlet-Wrapper" style="">
+				<div class="psc-divPortlet-Content">
+					<div id="new-clock" style="display: none;">
+<a class="open-reveal-modal">&times;</a>
+<div id="myModal" class="reveal-modal" style="display: block;">
+<a class="close-reveal-modal">&times;</a>
+<h2>TRƯỜNG ĐẠI HỌC KINH TẾ QUỐC D&Acirc;N</h2>
+<a href="https://tuyensinhcq.neu.edu.vn" target="_blank" id="mbt-counter" style="background-color: white; color: black;">TUYỂN SINH ĐẠI HỌC CH&Iacute;NH QUY NĂM 2018</a>
+</div>
+</div>
+<style type="text/css">
+    #mbt-counter {
+    width:100%;
+    padding: 0px 10px;
+    text-align:center;
+    font-family: Arial;
+    background-color: rgba(0, 0, 0, 0)!important;
+    color: #FFF!important;
+    position: absolute;
+    left: 0;
+    bottom: 20px;
+    }
+    .oclock{
+    float:left;
+    margin:0px 15px;
+    }
+    .oclock p{
+    color:yellow;
+    font-size:35px;
+    font-weight:400!important;
+    }
+    .oclock span{
+    font-weight:400!important;
+    }
+    .reveal-modal h2 {
+    width: 100%;
+    position: absolute;
+    top: 23%;
+    text-align:center;
+    font-family: Arial;
+    font-size: 15px;
+    padding:0px 5px;
+    text-shadow: 2px 4px 10px #000;
+    color: yellow;
+    left: 0;
+    margin:0;
+    }
+    .reveal-modal-bg {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background: rgba(0,0,0,.8);
+    z-index: 100;
+    display: none;
+    top: 0;
+    left: 0;
+    }
+    .reveal-modal {
+    border:1px solid yellow;
+    background-color: #0065CA;
+    z-index: 11111;
+    position: fixed;
+    right: 45px;
+    width: 310px;
+    height: 120px;
+    background-image: url('/Resources/ImagePhoto/count-down-bg.png');
+    background-repeat:no-repeat;
+    /* background: rgba(51, 51, 51, 0) url(https://1.bp.blogspot.com/-DrMdgQi7Uq4/UsMDvui64fI/AAAAAAAAM3k/QLhbbmjPwnM/s1600/happy-new-year.png) no-repeat -17px 0px; */
+    padding: 0px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+    bottom: 0;
+    }
+    .reveal-modal.small         { width: 200px; margin-left: -140px;}
+    .reveal-modal.medium         { width: 400px; margin-left: -240px;}
+    .reveal-modal.large         { width: 600px; margin-left: -340px;}
+    .reveal-modal.xlarge         { width: 800px; margin-left: -440px;}
+    .close-reveal-modal {
+    font-size: 32px;
+    z-index: 10000;
+    line-height: 0.5;
+    text-align: right;
+    width: 310px;
+    color: #fff;
+    right: 0;
+    position: absolute;
+    font-weight: bold;
+    cursor: pointer;
+    }
+    .close-reveal-modal:hover {
+    color:#fff;
+    }
+    .open-reveal-modal:hover{color:#fff;}
+    .open-reveal-modal {
+    font-size: 32px;
+    z-index: 10000;
+    line-height: 0.5;
+    text-align: right;
+    width: 300px;
+    color: #fff;
+    background: #0065CA;
+    right: 45px;
+    position: fixed;
+    font-weight: bold;
+    cursor: pointer;
+    bottom:0
+    }
+    @media (max-width: 350px) {
+    .reveal-modal{
+    right:0!important;
+    }
+    .backtotop{bottom: 120px;}
+    }
+</style>
+<script>
+
+ $(document).ready(function()
+                            {      
+$('#new-clock').delay(30000).fadeOut('slow');         
+                    $('.close-reveal-modal').click(function () {
+                        //$("#myModal").css("height", "0px");
+                        //$(".reveal-modal h2").css("display", "none");
+                        $('#myModal').toggle();
+                    });
+                    $('.open-reveal-modal').click(function () {
+                        //$("#myModal").css("height", "0px");
+                        //$(".reveal-modal h2").css("display", "none");
+                        $('#myModal').toggle();
+                    });
+});
+</script>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<script>
+    pscjq(window).load(function () {
+        pscjq   ('.customTabs .nav-tabs').scrollingTabs();
+    });
+	
+	</script>
+       
+      <a id="backTop" class="backtotop" href="#" style="display: block;"><i class="fa fa-angle-up"></i> Top </a>
+       
+        <div id="articleModal" class="modal fade" role="form">
+            <div class="modal-dialog modal-lg vertical-align-center-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Some text in the modal.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    
+
+<script type="text/javascript">
+//<![CDATA[
+window.__TsmHiddenField = $get('RadScriptManager1_TSM');Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindowManager, {"clientStateFieldID":"RadWindowManager1_ClientState","formID":"form1","iconUrl":"","minimizeIconUrl":"","name":"RadWindowManager1","skin":"Default","windowControls":"[]"}, null, null, $get("RadWindowManager1"));
+});
+//]]>
+</script>
+</form>
+       
+</body>
+</html>
