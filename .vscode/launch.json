@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/USER/Desktop/git/2023-2024.1.TIN4153.001/hungminh",
-      "program": "c:/Users/USER/Desktop/git/2023-2024.1.TIN4153.001/hungminh/build/Debug/outDebug",
+      "cwd": "d:/LTM/2023-2024.1.TIN4153.001/TienTien",
+      "program": "d:/LTM/2023-2024.1.TIN4153.001/TienTien/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
