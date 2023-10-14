@@ -8,6 +8,9 @@
 #include "windows.h"
 
 #include <fstream>
+#include <regex>
+#include <math.h>
+#include <stdlib.h>
 
 //Hàm khởi tạo WinSock
 bool InitWinSock(){
@@ -122,6 +125,105 @@ void saveHost2Html(const std::string& host,int port,std::string path, const std:
   fs.close();
 }
 
+//Hàm lưu URL vào FILE
+bool save2FILE(const std::string& host,int port,std::string path, FILE* f){
+  std::string ip = getIpAddress(host);
+  SOCKET sockConnect;
+  sockConnect = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+  if (sockConnect == INVALID_SOCKET) {
+    //LOG_ET("socket() loi: %ld\n", WSAGetLastError());
+    return false;
+  }
+
+  sockaddr_in srvService;
+  srvService.sin_family = AF_INET;
+  //srvService.sin_addr.s_addr = inet_addr(ip.c_str());
+  inet_pton(AF_INET,ip.c_str(),&srvService.sin_addr.s_addr);
+  srvService.sin_port = htons(port);
+  
+  // Connect to server.
+  int iResult = connect(sockConnect, (struct sockaddr *) &srvService, sizeof (srvService));
+  if (iResult == SOCKET_ERROR) {
+    //LOG_ET("connect() error: %ld\n", WSAGetLastError());
+    closesocket(sockConnect);
+    return false;
+  }
+  if (path.empty()) path = "/";
+  //std::string request = "GET / HTTP/1.1\r\nHost: " + host + "\r\nConnection: close\r\n\r\n";
+  std::string request = StringFormat("GET %s HTTP/1.1\r\nHost: %s\r\nConnection: close\r\n\r\n",path.c_str(),host.c_str());
+  if(send(sockConnect, request.c_str(), strlen(request.c_str())+1, 0) < 0){
+    //LOG_ET("send() failed: %ld\n",WSAGetLastError());
+  }
+  
+  std::string header;
+  char buffer[4097];
+  int n, total = 0, bytes = 0;
+  std::string raw_site;
+  bool isHeader_completed = false;
+  uint64_t Content_Length = 0;
+  int val_tmp =0;
+  while((n = recv(sockConnect, buffer, 4096, 0)) > 0){
+    total += n;
+
+    if (!isHeader_completed){ //nhận Response Header
+      
+      buffer[n] = 0;
+      
+      std::string t(buffer);
+      size_t pos = t.find("\r\n\r\n");//4 kytu 
+      if (pos != std::string::npos){
+        isHeader_completed = true;
+
+        header.append(t.substr(0,pos));
+        bytes += (total - ((int)pos + 4));
+        size_t len_at = header.find("Content-Length:");
+        if (len_at != std::string::npos){
+          Content_Length = strtoull(&header[len_at + 16], NULL, 10);
+        }
+        LOG_D("[HEADER ]==========>\n%s\n",header.c_str());
+        int size_header = (int)header.size();
+        LOG_W("HEADER SIZE:%d bytes:%d Total:%d Content_Length:%llu\n",size_header,bytes,total,Content_Length);
+        if (f) fwrite (&buffer[pos + 4] , sizeof(char), (size_t)bytes, f);
+      }
+      else{
+        header.append(buffer);
+      }            
+    }
+    else{
+      bytes += n;
+      if (f) fwrite (buffer , sizeof(char), (size_t)n, f);
+      if (Content_Length > 0) {
+        double val = 100 * (double)bytes/Content_Length;  
+        int t = (int)val;              
+        if (val_tmp != t) LOG_DT("Downloading %0.1lf%% ...\n",val);
+        val_tmp = t;
+        
+      }
+    }
+  }//while((n = recv(sockConnect, buffer, 4096, 0)) > 0){
+
+  closesocket(sockConnect);
+  
+  LOG_WT("IMAGE SIZE:%d/%d\n",bytes,total);
+  return true;
+}
+
+//Hàm lưu URL vào file
+void saveURL2File(const std::string& urlJPG, const std::string& file){
+  //thử tìm hiểu đoạn code để save file ảnh
+  LOG_I("Bài tập: Lưu file ảnh từ website\n");
+  LOG_I("URL [%s]\n",urlJPG.c_str());  
+  LOG_E("1. Tìm hiểu các tài liệu về lập trình lưu file JPG (nhị phân) trên google\n");
+  LOG_E("2. Giải thích cách làm trong file WORD và đưa lên github trong thư mục của từng thành viên\n");
+
+  FILE *f = fopen(file.c_str(),"wb");
+
+  Uri u = Uri::Parse(urlJPG);
+  save2FILE(u.Host.c_str(),u.getPort(),u.getPath(),f);
+
+  fclose(f);
+}
+
 //Hiển thị các thành phần của URI 
 void showUri(const std::string& url){
   Uri u = Uri::Parse(url);
@@ -172,16 +274,14 @@ int main(int argc, char const *argv[])
 
   LOG_IT("[*] Khoi tao WinSocket\n");
   if (!InitWinSock()) return -1;
-
-  //showUri("http://danang.edu.vn/documents/11834/0/NAMHOC2023-2024.png");
-  //test_uri();
-  //return -1;
-  //test_getIpAddress();
-
-  //std::string url = "http://tuyensinh.husc.edu.vn/category/quyche/";
-  std::string url = "http://danang.edu.vn/van-ban-chi-dao";
+  std::string url;
+  Uri u;
+  
+/* 
+  //url = "http://tuyensinh.husc.edu.vn/category/quyche/";
+  url  = "http://danang.edu.vn/van-ban-chi-dao";
   showUri(url);
-  Uri u = Uri::Parse(url);
+  u = Uri::Parse(url);
   
   //Tạo thư mục có tên như domain (u.Host) để lưu nội dung
   CreateDirectoryA(u.Host.c_str(),NULL);
@@ -189,6 +289,30 @@ int main(int argc, char const *argv[])
   saveHost2Html(u.Host.c_str(),u.getPort(),"/",u.Host + "/index.html");
   //Lưu nội dung url vào file quyche.html trong u.Host
   saveHost2Html(u.Host.c_str(),u.getPort(),u.getPath(),u.Host + "/quyche.html");
+*/
+
+  //url = "http://iuh.edu.vn/Resource/Upload2/Image/album/toan%20canh%20xl.JPG";
+  //url = "http://daotao.hutech.edu.vn/Upload/file/HuongDanHuyHP/HUONG%20DAN%20HUY%20HP%202022.doc.docx";
+  //url = "daotao.hutech.edu.vn/Upload/file/huong%20dan%20dang%20ky%20mon%20hoc%20Video%20web.wmv";
+  //url = "http://www.vr.org.vn/contents/multimedia/Video/R%C3%BAt%20g%E1%BB%8Dn%20th%E1%BB%A7%20t%E1%BB%A5c%20%C4%91%C4%83ng%20ki%E1%BB%83m/CDK2.mp4";
+  url = "http://www.vr.org.vn/contents/multimedia/Video/Chia%20s%E1%BA%BB%20d%E1%BB%AF%20li%E1%BB%87u%20ph%E1%BB%A5c%20v%E1%BB%A5%20qu%E1%BA%A3n%20l%C3%BD%20v%C3%A0%20x%E1%BB%AD%20l%C3%BD%20vi%20ph%E1%BA%A1m/CDK1.mp4";
+
+  u = Uri::Parse(url);
+  //Tạo thư mục có tên như domain (u.Host) để lưu nội dung
+  CreateDirectoryA(u.Host.c_str(),NULL);
+
+  //showUri("http://iuh.edu.vn/Resource/Upload2/Image/album/toan%20canh%20xl.JPG");
+  //showUri(url);
+  
+  std::string fname = "image.jpg";
+  size_t pos = url.rfind("/");
+  if (pos != std::string::npos){
+    fname = url.substr(pos + 1);
+    fname = std::regex_replace(fname, std::regex("%20"), "_");
+    //std::replace( fname.begin(),fname.end(), (char)0x20, '_');
+  }
+  
+  saveURL2File(url,  u.Host + "/" + fname);  
 
   //Clean Winsock trước khi thoát ứng dụng
   WSACleanup();
