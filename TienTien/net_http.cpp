@@ -277,7 +277,7 @@ int main(int argc, char const *argv[])
   std::string url;
   Uri u;
   
-/* 
+ /*
   //url = "http://tuyensinh.husc.edu.vn/category/quyche/";
   url  = "http://danang.edu.vn/van-ban-chi-dao";
   showUri(url);
