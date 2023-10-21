@@ -161,6 +161,7 @@ void test_uri(){
   showUri("localhost?&foo=1:2:3"); 
   showUri("https://github.com/vvdung-husc/2022-2023.1.TIN4153.001");
   showUri("http://tuyensinh.husc.edu.vn/");  
+  showUri("https://chavame.com/");
 
   LOG_D("");
 }
@@ -181,7 +182,10 @@ int main(int argc, char const *argv[])
   //std::string url = "http://tuyensinh.husc.edu.vn/category/quyche/";
   //std::string url = "http://danang.edu.vn/van-ban-chi-dao";
   // std::string url = "http://sgdtravinh.edu.vn/";
-  std::string url = "https://netraovat.vn/";
+  //std::string url = "https://1raovat.vn/";
+  //std::string url = "https://amtech.vn/";
+  //std::string url = "https://ub.com.vn/";
+  std::string url = "https://chavame.com/";
   showUri(url);
   Uri u = Uri::Parse(url);
   
