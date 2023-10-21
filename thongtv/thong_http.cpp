@@ -182,7 +182,8 @@ int main(int argc, char const *argv[])
   //std::string url = "http://tuyensinh.husc.edu.vn/category/quyche/";
    // std::string url = "	http://vnpay.vn/";
    // std::string url = " http://thongtin24h.net/";
-    std::string url = " http://www.hdvietnam.com/";
+   // std::string url = " http://www.hdvietnam.com/";
+   std::string url = " http://chuyenmuaban.vn/";
   showUri(url);
   Uri u = Uri::Parse(url);
   
@@ -190,8 +191,8 @@ int main(int argc, char const *argv[])
   CreateDirectoryA(u.Host.c_str(),NULL);
   //Lưu nội dung trang chủ vào file index.html trong u.Host
   saveHost2Html(u.Host.c_str(),u.getPort(),"/",u.Host + "/index.html");
-  //Lưu nội dung url vào file hdvietnam.html trong u.Host
-  saveHost2Html(u.Host.c_str(),u.getPort(),u.getPath(),u.Host + "/hdvietnam.html");
+  //Lưu nội dung url vào file //.html trong u.Host
+  saveHost2Html(u.Host.c_str(),u.getPort(),u.getPath(),u.Host + "/muaban.html");
 
   //Clean Winsock trước khi thoát ứng dụng
   WSACleanup();
