@@ -161,6 +161,7 @@ void test_uri(){
   showUri("localhost?&foo=1:2:3"); 
   showUri("https://github.com/vvdung-husc/2022-2023.1.TIN4153.001");
   showUri("http://tuyensinh.husc.edu.vn/");  
+  showUri("http://www.hdvietnam.com");  
 
   LOG_D("");
 }
@@ -181,7 +182,7 @@ int main(int argc, char const *argv[])
   //std::string url = "http://tuyensinh.husc.edu.vn/category/quyche/";
    // std::string url = "	http://vnpay.vn/";
    // std::string url = " http://thongtin24h.net/";
-    std::string url = " http://chuyenmuaban.vn/";
+    std::string url = " http://www.hdvietnam.com/";
   showUri(url);
   Uri u = Uri::Parse(url);
   
@@ -189,8 +190,8 @@ int main(int argc, char const *argv[])
   CreateDirectoryA(u.Host.c_str(),NULL);
   //Lưu nội dung trang chủ vào file index.html trong u.Host
   saveHost2Html(u.Host.c_str(),u.getPort(),"/",u.Host + "/index.html");
-  //Lưu nội dung url vào file quyche.html trong u.Host
-  saveHost2Html(u.Host.c_str(),u.getPort(),u.getPath(),u.Host + "/quyche.html");
+  //Lưu nội dung url vào file hdvietnam.html trong u.Host
+  saveHost2Html(u.Host.c_str(),u.getPort(),u.getPath(),u.Host + "/hdvietnam.html");
 
   //Clean Winsock trước khi thoát ứng dụng
   WSACleanup();
