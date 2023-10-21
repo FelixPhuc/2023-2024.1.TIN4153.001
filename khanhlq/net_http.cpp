@@ -293,7 +293,9 @@ int main(int argc, char const *argv[])
 
   //url = "http://iuh.edu.vn/Resource/Upload2/Image/album/toan%20canh%20xl.JPG";
   //url = "http://daotao.hutech.edu.vn/Upload/file/HuongDanHuyHP/HUONG%20DAN%20HUY%20HP%202022.doc.docx";
-  url = "http://datafile.chinhsachquandoi.gov.vn/ecm/source_files/2023/07/12/qpvn-di-tim-dong-doi-so-251-091254-120723-77.mp4";
+  //url = "http://datafile.chinhsachquandoi.gov.vn/ecm/source_files/2023/07/12/qpvn-di-tim-dong-doi-so-251-091254-120723-77.mp4";
+  //url = "";
+ // url = "http://qpvn.vn/uploads/video/Di tim dong doi/2023/DTDD168_TB_So_259.mp4";
   u = Uri::Parse(url);
   //Tạo thư mục có tên như domain (u.Host) để lưu nội dung
   CreateDirectoryA(u.Host.c_str(),NULL);
