@@ -2,7 +2,7 @@
 #include "..\_COMMON\Log.h"
 #include "../_COMMON/Utils.h"
 #include "../_COMMON/uri.h"
-
+#include <stdint.h>
 #include "winsock2.h"
 #include "ws2tcpip.h"
 #include "windows.h"
@@ -30,7 +30,7 @@ bool InitWinSock(){
 
 int main(int argc, char const *argv[])
 {
-  LOG_WT("*** SERVER 1-  NGUYENCUUHIEUNHAN ***\n");
+  LOG_WT("*** SERVER 1- NGUYENCUUHIEUNHAN ***\n");
   LOG_WT("* Su dung TELNET de ket noi den SERVER\n");
   LOG_WT("* telnet IP_SERVER PORT_NUMBER\n");
   LOG_WT("* Nhan Ctrl+] de su dung options\n");
