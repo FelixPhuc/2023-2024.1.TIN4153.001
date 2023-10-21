@@ -30,7 +30,7 @@ bool InitWinSock(){
 
 int main(int argc, char const *argv[])
 {
-  LOG_WT("*** SERVER 1 ***\n");
+  LOG_WT("*** SERVER 1- LE QUANG KHANH ***\n");
   LOG_WT("* Su dung TELNET de ket noi den SERVER\n");
   LOG_WT("* telnet IP_SERVER PORT_NUMBER\n");
   LOG_WT("* Nhan Ctrl+] de su dung options\n");
@@ -102,6 +102,7 @@ int main(int argc, char const *argv[])
     if (iResult > 0) {
       recvbuf[iResult] = 0;
       LOG_D("So byte nhan duoc: %d - noi dung\n%s\n", iResult,recvbuf);      
+      //kiem tra xem co phai la exit ko de thoat
       if (strcmp(recvbuf, "exit") == 0) {
             LOG_WT("Yeu cau dong cua ket noi tu client => break\n");    
             break;
