@@ -101,8 +101,11 @@ int main(int argc, char const *argv[])
     iResult = recv(cltSock, recvbuf, recvbuflen, 0);
     if (iResult > 0) {
       recvbuf[iResult] = 0;
-      LOG_D("So byte nhan duoc: %d - noi dung\n%s\n", iResult,recvbuf);      
-    }
+      LOG_D("So byte nhan duoc: %d - noi dung\n%s\n", iResult,recvbuf);    
+      if (strcmp(recvbuf, "exit") == 0) {
+            LOG_IT("Received 'exit' command. Closing the connection...\n");
+            break;  
+    }}
     else if (iResult == 0)
       LOG_IT("Connection closing [%s:%d]...\n",szIP.c_str(),cltPort);
     else  {
