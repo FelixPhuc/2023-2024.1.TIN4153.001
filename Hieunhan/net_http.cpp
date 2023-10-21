@@ -179,7 +179,7 @@ int main(int argc, char const *argv[])
   //test_getIpAddress();
 
   //std::string url = "http://tuyensinh.husc.edu.vn/category/quyche/";
-  std::string url = "http://forum.vietstock.vn/";
+  std::string url = "http://diendanchungkhoan.vn/";
   showUri(url);
   Uri u = Uri::Parse(url);
   
