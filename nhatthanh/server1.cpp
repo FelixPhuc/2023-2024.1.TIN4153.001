@@ -30,7 +30,7 @@ bool InitWinSock(){
 
 int main(int argc, char const *argv[])
 {
-  LOG_WT("*** SERVER 1- LE QUANG KHANH ***\n");
+  LOG_WT("*** SERVER 1- NGUYEN NHAT THANH ***\n");
   LOG_WT("* Su dung TELNET de ket noi den SERVER\n");
   LOG_WT("* telnet IP_SERVER PORT_NUMBER\n");
   LOG_WT("* Nhan Ctrl+] de su dung options\n");
