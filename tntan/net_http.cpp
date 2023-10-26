@@ -277,9 +277,9 @@ int main(int argc, char const *argv[])
   std::string url;
   Uri u;
   
-/* 
+
   //url = "http://tuyensinh.husc.edu.vn/category/quyche/";
-  url  = "http://danang.edu.vn/van-ban-chi-dao";
+ /* url  = "http://danang.edu.vn/van-ban-chi-dao";
   showUri(url);
   u = Uri::Parse(url);
   
@@ -288,12 +288,13 @@ int main(int argc, char const *argv[])
   //Lưu nội dung trang chủ vào file index.html trong u.Host
   saveHost2Html(u.Host.c_str(),u.getPort(),"/",u.Host + "/index.html");
   //Lưu nội dung url vào file quyche.html trong u.Host
-  saveHost2Html(u.Host.c_str(),u.getPort(),u.getPath(),u.Host + "/quyche.html");
+  aveHost2Html(u.Host.c_str(),u.getPort(),u.getPath(),u.Host + "/quyche.html");
 */
 
   //url = "http://iuh.edu.vn/Resource/Upload2/Image/album/toan%20canh%20xl.JPG";
   //url = "http://daotao.hutech.edu.vn/Upload/file/HuongDanHuyHP/HUONG%20DAN%20HUY%20HP%202022.doc.docx";
-  url = "daotao.hutech.edu.vn/Upload/file/huong%20dan%20dang%20ky%20mon%20hoc%20Video%20web.wmv";
+  //url = "daotao.hutech.edu.vn/Upload/file/huong%20dan%20dang%20ky%20mon%20hoc%20Video%20web.wmv";
+  url = "http://www.vr.org.vn/contents/multimedia/Video/Chia%20s%E1%BA%BB%20d%E1%BB%AF%20li%E1%BB%87u%20ph%E1%BB%A5c%20v%E1%BB%A5%20qu%E1%BA%A3n%20l%C3%BD%20v%C3%A0%20x%E1%BB%AD%20l%C3%BD%20vi%20ph%E1%BA%A1m/CDK1.mp4";
   u = Uri::Parse(url);
   //Tạo thư mục có tên như domain (u.Host) để lưu nội dung
   CreateDirectoryA(u.Host.c_str(),NULL);
