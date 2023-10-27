@@ -10,7 +10,8 @@
 #include <fstream>
 #include <regex>
 #include <math.h>
-#include <stdlib.h>
+//#include <stdlib.h>
+#include <cstdint>
 
 #define MAX_BUFFER_SIZE   2048
 #define PORT_LISTEN       12345
@@ -30,7 +31,7 @@ bool InitWinSock(){
 
 int main(int argc, char const *argv[])
 {
-  LOG_WT("*** SERVER 1-  NGUYENCUUHIEUNHAN ***\n");
+  LOG_WT("*** SERVER 1- NGUYEN VAN HOANG NHAT ***\n");
   LOG_WT("* Su dung TELNET de ket noi den SERVER\n");
   LOG_WT("* telnet IP_SERVER PORT_NUMBER\n");
   LOG_WT("* Nhan Ctrl+] de su dung options\n");
@@ -102,6 +103,11 @@ int main(int argc, char const *argv[])
     if (iResult > 0) {
       recvbuf[iResult] = 0;
       LOG_D("So byte nhan duoc: %d - noi dung\n%s\n", iResult,recvbuf);      
+      //kiem tra xem co phai la exit ko de thoat
+      if (strcmp(recvbuf, "exit") == 0) {
+            LOG_WT("Yeu cau dong cua ket noi tu client => break\n");    
+            break;
+      }    
     }
     else if (iResult == 0)
       LOG_IT("Connection closing [%s:%d]...\n",szIP.c_str(),cltPort);
