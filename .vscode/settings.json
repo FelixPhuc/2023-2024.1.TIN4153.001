@@ -106,12 +106,6 @@
     "ctime": "cpp",
     "regex": "cpp",
     "sstream": "cpp",
-    "iostream": "cpp",
-    "cstring": "cpp",
-    "ratio": "cpp",
-    "semaphore": "cpp",
-    "stop_token": "cpp",
-    "thread": "cpp",
-    "cinttypes": "cpp"
+    "iostream": "cpp"
   }
 }
