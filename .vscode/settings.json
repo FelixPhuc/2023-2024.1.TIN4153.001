@@ -107,6 +107,5 @@
     "regex": "cpp",
     "sstream": "cpp",
     "iostream": "cpp"
-  },
-  "C_Cpp.errorSquiggles": "disabled"
+  }
 }
