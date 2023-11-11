@@ -29,7 +29,7 @@ bool InitWinSock(){
 }
 
 void Usage(const char* binName){
-  LOG_WT("*** USAGE - VO VIET DUNG***\n");
+  LOG_WT("*** USAGE - LE QUANG KHANH***\n");
   LOG_IT("* %s <ipserver> <port>\n",binName);
   LOG_WT("* Enter 'exit' or Press 'Ctrl + C' to exit application\n");
 }
@@ -94,7 +94,7 @@ int main(int argc, char const *argv[])
     LOG_DT("Nhap noi dung:");
     gets(msg);
 
-    iResult = send(cltSock, msg, strlen(msg), 0);
+    iResult = send(cltSock, msg, sizeof(msg), 0);
     if (iResult <= 0)
     {
       if (iResult == 0)  LOG_IT("Connection closing ...\n");

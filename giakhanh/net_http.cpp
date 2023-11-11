@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <cstdint>
 #include "..\_COMMON\Log.h"
 #include "../_COMMON/Utils.h"
 #include "../_COMMON/uri.h"
@@ -12,6 +11,7 @@
 #include <regex>
 #include <math.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 //Hàm khởi tạo WinSock
 bool InitWinSock(){

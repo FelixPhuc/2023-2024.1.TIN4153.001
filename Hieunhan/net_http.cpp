@@ -2,7 +2,7 @@
 #include "..\_COMMON\Log.h"
 #include "../_COMMON/Utils.h"
 #include "../_COMMON/uri.h"
-
+#include <cstdint>
 #include "winsock2.h"
 #include "ws2tcpip.h"
 #include "windows.h"

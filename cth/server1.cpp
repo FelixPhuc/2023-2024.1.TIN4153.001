@@ -33,7 +33,7 @@ void processClient(SOCKET cltSock);
 
 int main(int argc, char const *argv[])
 {
-  LOG_WT("*** SERVER 1 - VO VIET DUNG***\n");
+  LOG_WT("*** SERVER 1 - CTH***\n");
   LOG_WT("* Su dung TELNET de ket noi den SERVER\n");
   LOG_WT("* telnet IP_SERVER PORT_NUMBER\n");
   LOG_WT("* Nhan Ctrl+] de su dung options\n");
