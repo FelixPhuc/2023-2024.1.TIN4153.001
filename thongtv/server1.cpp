@@ -106,7 +106,7 @@ int main(int argc, char const *argv[])
     if (strcmp(recvbuf, "exit") == 0) {
       LOG_IT("Client requested to exit. Closing connection [%s:%d]...\n", szIP.c_str(), cltPort);
       break; // Thoát vòng lặp và đóng kết nối
-    }    
+    }   
     }
     else if (iResult == 0)
       LOG_IT("Connection closing [%s:%d]...\n",szIP.c_str(),cltPort);
