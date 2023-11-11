@@ -29,7 +29,7 @@ bool InitWinSock(){
 }
 
 void Usage(const char* binName){
-  LOG_WT("*** USAGE - VO VIET DUNG***\n");
+  LOG_WT("*** USAGE - NGUYEN THI THAO TIEN***\n");
   LOG_IT("* %s <ipserver> <port>\n",binName);
   LOG_WT("* Enter 'exit' or Press 'Ctrl + C' to exit application\n");
 }
