@@ -11,6 +11,7 @@
 #include <regex>
 #include <math.h>
 #include <stdlib.h>
+#include <thread>
 
 #define MAX_BUFFER_SIZE   2048
 #define PORT_LISTEN       12345
@@ -27,6 +28,8 @@ bool InitWinSock(){
   LOG_DT("[-] Winsock khoi tao thanh cong\n");
   return true;
 }
+
+void processClient(SOCKET cltSock);
 
 int main(int argc, char const *argv[])
 {
@@ -75,8 +78,23 @@ int main(int argc, char const *argv[])
   }
 
   //Chờ client kết nối
-  LOG_WT("Server dang lang nghe tai cong so: %d\n",PORT_LISTEN);
+  LOG_WT("Server Listening @ %d: %d\n",PORT_LISTEN);
+  LOG_WT("Press Ctrl+C to exit server application\n");
+  struct sockaddr_in cltAddress;
+  int addrlen = (int)sizeof(cltAddress);
 
+  while (true){
+    memset(&cltAddress,0,sizeof(cltAddress));
+    SOCKET cltSock = accept(srvSock, (struct sockaddr*)&cltAddress,&addrlen);
+    if (cltSock == INVALID_SOCKET) {
+      LOG_ET("accept failed with error: %d\n", WSAGetLastError());
+      closesocket(srvSock);
+      WSACleanup();
+      return 1;
+    }
+    new std::thread(processClient,cltSock);
+  }//while (true){
+/*
   struct sockaddr_in cltAddress;
   int addrlen = (int)sizeof(cltAddress);
   SOCKET cltSock = accept(srvSock, (struct sockaddr*)&cltAddress,&addrlen);
@@ -117,11 +135,48 @@ int main(int argc, char const *argv[])
     }
 
   } while (iResult > 0);
-
   closesocket(cltSock);
+*/
+  
   //Clean Winsock trước khi thoát ứng dụng
   WSACleanup();
   LOG_IT("[*] --- Thoat ung dung --- [*]\n");
   LOG_D("");
   return 0;
+}
+
+void processClient(SOCKET cltSock) 
+{
+  int iSendResult;
+  char recvbuf[MAX_BUFFER_SIZE];
+  int recvbuflen = MAX_BUFFER_SIZE;
+
+  struct sockaddr_in cltAddress;
+  int addrlen = (int)sizeof(cltAddress);
+  getpeername(cltSock,(sockaddr*)&cltAddress,&addrlen);
+  uint8_t* pIP = (uint8_t*)&cltAddress.sin_addr.s_addr;
+  std::string szIP; 
+  int cltPort = ntohs(cltAddress.sin_port) ;
+  szIP = StringFormat("%d.%d.%d.%d",pIP[0],pIP[1],pIP[2],pIP[3]);
+  std::string szClient = StringFormat("%s:%d",szIP.c_str(),cltPort);
+  LOG_WT("Client: %s:%d connected\n",szIP.c_str(),cltPort );
+  int iResult;
+// Receive until the peer shuts down the connection
+  while (true) {
+    iResult = recv(cltSock, recvbuf, recvbuflen, 0);
+    if (iResult > 0) {
+      recvbuf[iResult] = 0;
+      LOG_D("[%s] recv: %d\n%s\n", szClient.c_str(), iResult,recvbuf); 
+      continue;     
+    }
+
+    // if (iResult == 0)
+    //   LOG_IT("Connection closing [%s:%d]...\n",szIP.c_str(),cltPort);
+    // else  {
+    //   LOG_ET("recv failed with error: %d\n", WSAGetLastError());            
+    // }
+    break;
+  }
+  closesocket(cltSock);  
+  LOG_WT("Client: %s:%d exit\n",szIP.c_str(),cltPort );
 }
