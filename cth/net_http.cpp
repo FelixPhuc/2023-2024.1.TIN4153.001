@@ -2,7 +2,7 @@
 #include "..\_COMMON\Log.h"
 #include "../_COMMON/Utils.h"
 #include "../_COMMON/uri.h"
-#include <cstdint>
+
 #include "winsock2.h"
 #include "ws2tcpip.h"
 #include "windows.h"
@@ -277,7 +277,7 @@ int main(int argc, char const *argv[])
   std::string url;
   Uri u;
   
-/* 
+ /*
   //url = "http://tuyensinh.husc.edu.vn/category/quyche/";
   url  = "http://danang.edu.vn/van-ban-chi-dao";
   showUri(url);
@@ -293,8 +293,12 @@ int main(int argc, char const *argv[])
 
   //url = "http://iuh.edu.vn/Resource/Upload2/Image/album/toan%20canh%20xl.JPG";
   //url = "http://daotao.hutech.edu.vn/Upload/file/HuongDanHuyHP/HUONG%20DAN%20HUY%20HP%202022.doc.docx";
-  url = "http://qpvn.vn/uploads/video/Di%20tim%20dong%20doi/2021/DTDD97_TB_So_192(3).mp4";
-  u = Uri::Parse(url);
+  //url = "daotao.hutech.edu.vn/Upload/file/huong%20dan%20dang%20ky%20mon%20hoc%20Video%20web.wmv";
+  
+  //url = "http://www.vr.org.vn/contents/multimedia/Video/R%C3%BAt%20g%E1%BB%8Dn%20th%E1%BB%A7%20t%E1%BB%A5c%20%C4%91%C4%83ng%20ki%E1%BB%83m/CDK2.mp4";
+  // url = "http://www.vr.org.vn/contents/multimedia/Video/Chia%20s%E1%BA%BB%20d%E1%BB%AF%20li%E1%BB%87u%20ph%E1%BB%A5c%20v%E1%BB%A5%20qu%E1%BA%A3n%20l%C3%BD%20v%C3%A0%20x%E1%BB%AD%20l%C3%BD%20vi%20ph%E1%BA%A1m/CDK1.mp4";
+url= "http://www.vr.org.vn/contents/multimedia/Video/R%C3%BAt%20g%E1%BB%8Dn%20th%E1%BB%A7%20t%E1%BB%A5c%20%C4%91%C4%83ng%20ki%E1%BB%83m/CDK2.mp4";
+  u = Uri::Parse(url); 
   //Tạo thư mục có tên như domain (u.Host) để lưu nội dung
   CreateDirectoryA(u.Host.c_str(),NULL);
 
