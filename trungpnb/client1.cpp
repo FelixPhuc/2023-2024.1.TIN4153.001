@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 #define MAX_BUFFER_SIZE   2048
-#define PORT_LISTEN       050699
+#define PORT_LISTEN       12345
 
 //Hàm khởi tạo WinSock
 bool InitWinSock(){
@@ -29,7 +29,7 @@ bool InitWinSock(){
 }
 
 void Usage(const char* binName){
-  LOG_WT("*** USAGE - NGUYENCUUHIEUNHAN***\n");
+  LOG_WT("*** USAGE - VO VIET DUNG***\n");
   LOG_IT("* %s <ipserver> <port>\n",binName);
   LOG_WT("* Enter 'exit' or Press 'Ctrl + C' to exit application\n");
 }
@@ -94,7 +94,7 @@ int main(int argc, char const *argv[])
     LOG_DT("Nhap noi dung:");
     gets(msg);
 
-    iResult = send(cltSock, msg, sizeof(msg), 0);
+    iResult = send(cltSock, msg, strlen(msg), 0);
     if (iResult <= 0)
     {
       if (iResult == 0)  LOG_IT("Connection closing ...\n");
