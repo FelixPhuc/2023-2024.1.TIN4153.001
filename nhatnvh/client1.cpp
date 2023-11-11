@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 #define MAX_BUFFER_SIZE   2048
-#define PORT_LISTEN       12345
+#define PORT_LISTEN       04062002
 
 //Hàm khởi tạo WinSock
 bool InitWinSock(){
